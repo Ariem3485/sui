@@ -1,3 +1,6 @@
+// Copyright (c) 2022, Mysten Labs, Inc.
+// SPDX-License-Identifier: Apache-2.0
+
 /// Endpoints for the NFT minting and signing
 /// use demo data for testing
 import { config } from './index';

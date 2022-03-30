@@ -1,3 +1,6 @@
+// Copyright (c) 2022, Mysten Labs, Inc.
+// SPDX-License-Identifier: Apache-2.0
+
 import { mapDatafromApi } from '../util';
 /// demo api endpoints and response data
 /// remove this file in production

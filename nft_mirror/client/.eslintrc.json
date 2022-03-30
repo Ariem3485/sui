@@ -10,8 +10,5 @@
     ],
     "rules": {
         "prettier/prettier": 2 // Means error
-    },
-    "ignorePatterns": [
-        "**/gateway-generated-schema.ts"
-    ]
+    }
 }
