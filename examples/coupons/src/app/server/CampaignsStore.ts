@@ -1,13 +1,12 @@
-import cluster from 'cluster';
 import { v4 as uuidV4 } from 'uuid';
-import { threadId, workerData } from 'worker_threads';
 
 export interface Campaign {
     id: string;
     name: string;
     discount: number;
-    emails: string[];
+    emails: { name: string; email: string }[];
     emailTemplate: string;
+    expiration: Date;
 }
 
 class CampaignsStore {

@@ -241,10 +241,22 @@ function NewCampaign({}: NewCampaignModalProps) {
                                 />
                                 <FormText>
                                     Emails of the participants, separated with
-                                    new line
+                                    new line. Format: <i>Full Name - email</i>{' '}
+                                    eg. <i>John Doe - j@doe.test</i>
                                 </FormText>
                                 <FormFeedback type="invalid">
-                                    {formik.errors.emails}
+                                    {(Array.isArray(formik.errors.emails)
+                                        ? formik.errors.emails
+                                        : [formik.errors.emails]
+                                    )
+                                        .flatMap((error) =>
+                                            typeof error === 'object'
+                                                ? Object.values(error)
+                                                : error
+                                        )
+                                        .map((error, i) => (
+                                            <div key={i}>{error}</div>
+                                        ))}
                                 </FormFeedback>
                             </Col>
                         </Row>
