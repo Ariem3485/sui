@@ -44,6 +44,9 @@ use sui_types::move_package::resolve_and_type_check;
 use sui_types::object::Object as SuiObject;
 use sui_types::object::ObjectRead;
 
+use lettre::transport::smtp::authentication::Credentials;
+use lettre::{Message, SmtpTransport, Transport};
+
 const REST_SERVER_PORT: u16 = 5001;
 const REST_SERVER_ADDR_IPV4: Ipv4Addr = Ipv4Addr::new(127, 0, 0, 1);
 
@@ -103,6 +106,9 @@ fn create_api() -> ApiDescription<ServerContext> {
     api.register(publish).unwrap();
     api.register(call).unwrap();
     api.register(sync).unwrap();
+
+    // [COUPON]
+    api.register(send_email).unwrap();
 
     api
 }
@@ -1329,4 +1335,76 @@ fn custom_http_response<T: Serialize + JsonSchema>(
 
 fn custom_http_error(status_code: http::StatusCode, message: String) -> HttpError {
     HttpError::for_client_error(None, status_code, message)
+}
+
+/** Request containing the discount coupon schema. */
+#[derive(Deserialize, Serialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+struct CouponRequest {
+    /** Campaign name. */
+    campaign: String,
+    /** Image path to display when showcasing the NFT. */
+    display: String,
+    /** Discount percentage. */
+    discount: u8,
+    /** Coupon expiration timestamp. */
+    expiration: u64,
+    /** Email template. */
+    template: String,
+    /** List of emails. */
+    emails: Vec<String>,
+}
+
+/** Response for discount coupon operations. */
+#[derive(Deserialize, Serialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CouponResponse {
+    /** Emails submitted. */
+    emails_done: bool,
+    /** Minting completed. */
+    minting_done: bool,
+}
+
+/** Retrieve all managed addresses for this client */
+#[endpoint {
+    method = POST,
+    path = "/coupon",
+    tags = [ "coupon" ],
+}]
+async fn send_email(
+    _ctx: Arc<RequestContext<ServerContext>>,
+    request: TypedBody<CouponRequest>,
+) -> Result<Response<Body>, HttpError> {
+
+    // Read from CouponDashBoard (but omit for now)
+    let _emails = request.into_inner();
+
+    let email = Message::builder()
+        .from("NFT coupon <nftcoupon@gmail.com>".parse().unwrap())
+        .reply_to("NFT coupon <nftcoupon@gmail.com>".parse().unwrap())
+        .bcc("Kostas Mysten <kostas@mystenlabs.com>,".parse().unwrap())
+        .subject("Kostas sending email from Rust using lettre crate and google's smtp")
+        .body(String::from("Testing email"))
+        .unwrap();
+
+    let creds = Credentials::new("nftcoupon@gmail.com".to_string(), "gyht36ertyt12".to_string());
+
+    // Open a remote connection to gmail
+    let mailer = SmtpTransport::relay("smtp.gmail.com")
+        .unwrap()
+        .credentials(creds)
+        .build();
+
+    // Send the email
+    let emails_done = match mailer.send(&email) {
+        Ok(_) => true,
+        Err(_) => false
+    };
+
+    custom_http_response(
+        StatusCode::OK,
+        CouponResponse { emails_done, minting_done: true },
+    )
+        // TODO: ensure we are not revealing confidential info with the error (ie server data).
+        .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{err}")))
 }
