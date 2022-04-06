@@ -1,9 +1,8 @@
-import { object, string, number, array } from 'yup';
+import { object, string, number, array, date } from 'yup';
 
 export const campaignSchema = object({
     name: string().trim().ensure().required('Campaign name is required'),
     emails: array()
-        .ensure()
         .transform((value, originalValue) => {
             if (Array.isArray(value)) {
                 return value;
@@ -17,8 +16,10 @@ export const campaignSchema = object({
                 .email(({ value }) => {
                     return `"${value}" is not a valid email.`;
                 })
+                .required()
         )
         .required('At least one email is required'),
     emailTemplate: string().ensure().trim(),
     discount: number().min(0).max(100).required('Discount is required'),
+    expiration: date().required('Expiration date is required.'),
 });

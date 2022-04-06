@@ -1,11 +1,2 @@
-@import '~bootstrap-icons';
-
-$body-bg: #f8f8f8;
-
-@import '~bootstrap/scss/bootstrap.scss';
-
-html,
-body {
-    position: relative;
-    height: 100%;
-}
+@import '../app/@core/assets/fonts/feather/iconfont.css';
+@import '../app/@core/scss/core.scss';
