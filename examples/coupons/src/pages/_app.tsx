@@ -2,6 +2,9 @@ import type { AppProps } from 'next/app';
 import { store } from '@store/store';
 import { Provider } from 'react-redux';
 import { ThemeContext } from '@app/utility/context/ThemeColors';
+import { Toaster } from 'react-hot-toast';
+import type { ToastPosition } from 'react-hot-toast';
+import themeConfig from '@app/configs/themeConfig';
 
 import '../styles/globals.scss';
 import '@styles/base/bootstrap-extended/_include.scss';
@@ -16,12 +19,17 @@ import '@styles/react/apps/app-invoice.scss';
 import '@styles/react/libs/tables/react-dataTable-component.scss';
 import '@styles/react/libs/input-number/input-number.scss';
 import '@styles/react/libs/flatpickr/flatpickr.scss';
+import '@styles/react/libs/react-hot-toasts/react-hot-toasts.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <Provider store={store}>
             <ThemeContext>
                 <Component {...pageProps} />;
+                <Toaster
+                    position={themeConfig.layout.toastPosition as ToastPosition}
+                    toastOptions={{ className: 'react-hot-toast' }}
+                />
             </ThemeContext>
         </Provider>
     );

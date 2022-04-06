@@ -19,15 +19,26 @@ import {
 import InputNumber from 'rc-input-number';
 import { Plus, Minus } from 'react-feather';
 import Flatpickr from 'react-flatpickr';
+import toast from 'react-hot-toast';
 
 export type NewCampaignModalProps = {};
 
 function NewCampaign({}: NewCampaignModalProps) {
     const [saveInProgress, setSaveInProgress] = useState(false);
     const handleCreate = useCallback(async (data, { resetForm }) => {
+        let toastRes: (v: unknown) => void;
+        let toastRej: (v: unknown) => void;
+        const toastPromise = new Promise((res, rej) => {
+            toastRes = res;
+            toastRej = rej;
+        });
+        toast.promise(toastPromise, {
+            loading: 'Creating campaign...',
+            success: 'Campaign created!',
+            error: 'Creating campaign failed. Please try again',
+        });
         setSaveInProgress(true);
         const validatedData = campaignSchema.cast(data);
-        console.log({ data, validatedData });
         try {
             const res = await fetch('/api/campaigns', {
                 method: 'post',
@@ -43,8 +54,12 @@ function NewCampaign({}: NewCampaignModalProps) {
                 );
             }
             resetForm();
+            // @ts-expect-error
+            toastRes('');
         } catch (e) {
             console.log(e);
+            // @ts-expect-error
+            toastRej(e);
         } finally {
             setSaveInProgress(false);
         }
