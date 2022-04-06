@@ -35,7 +35,7 @@ function NewCampaign({}: NewCampaignModalProps) {
                     Accept: 'application/json',
                     'content-type': 'application/json',
                 },
-                body: JSON.stringify({ ...validatedData, test: 1 }),
+                body: JSON.stringify(validatedData),
             });
             if (!res.ok) {
                 throw new Error(
@@ -55,6 +55,7 @@ function NewCampaign({}: NewCampaignModalProps) {
             emails: '',
             emailTemplate: '',
             discount: 20,
+            expiration: '',
         },
         onSubmit: handleCreate,
         validationSchema: campaignSchema,
