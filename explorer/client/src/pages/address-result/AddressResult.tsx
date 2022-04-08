@@ -6,7 +6,7 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import ErrorResult from '../../components/error-result/ErrorResult';
 import Longtext from '../../components/longtext/Longtext';
-import OwnedObjects from '../../components/ownedobjects/OwnedObjects';
+import OwnedTypes from '../../components/ownedtypes/OwnedTypes';
 import theme from '../../styles/theme.module.css';
 import { DefaultRpcClient as rpc } from '../../utils/api/SuiRpcClient';
 
@@ -17,7 +17,10 @@ type DataType = {
 };
 
 type ResponseType = {
+    objType: string;
+    objDigest: string;
     objectId: string;
+    version: string;
 }[];
 
 function instanceOfDataType(object: any): object is DataType {
@@ -43,15 +46,7 @@ function Loaded({ data }: { data: DataType }) {
             </div>
             <div>
                 <div>Owned Objects</div>
-                <div>
-                    {
-                        <OwnedObjects
-                            objects={data.objects.map(
-                                ({ objectId }) => objectId
-                            )}
-                        />
-                    }
-                </div>
+                <div>{<OwnedTypes objects={data.objects} />}</div>
             </div>
         </div>
     );
