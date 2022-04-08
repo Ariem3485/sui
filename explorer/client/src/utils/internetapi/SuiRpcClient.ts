@@ -26,7 +26,18 @@ export class SuiRpcClient {
         id: string
     ): Promise<ObjectInfoResponse<object>> {
         const url = `${this.host}/object_info?objectId=${id}`;
-        return this.fetchJson(url);
+        return this.fetchJson(url).then((obj) => {
+            // quick hack to work with current API
+            if (obj?.data?.contents?.fields) {
+                obj.data.contents = {
+                    ...obj.data.contents,
+                    fields: undefined,
+                    ...obj.data.contents.fields,
+                };
+            }
+            console.log(obj);
+            return obj;
+        });
     }
 
     public async getObjectInfoT<T extends object>(

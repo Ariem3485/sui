@@ -22,7 +22,7 @@ export default async function handler(
             campaignSchema.cast(req.body) as Omit<Campaign, 'id'>
         );
 
-        const apiServer = process.env.API_SERVER || 'http://localhost:5001';
+        const apiServer = process.env.API_SERVER || 'http://127.0.0.1:5001';
         const apiURL = `${apiServer}/coupon`;
         const apiData = {
             campaign: newCampaign.name,

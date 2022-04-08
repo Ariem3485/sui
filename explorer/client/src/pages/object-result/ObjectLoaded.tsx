@@ -197,12 +197,10 @@ function ObjectLoaded({ data }: { data: DataType }) {
     return (
         <>
             <div className={styles.resultbox}>
-                {viewedData.data?.contents?.display && (
-                    <DisplayBox data={data} />
-                )}
+                <DisplayBox data={data} />
                 <div
                     className={`${styles.textbox} ${
-                        data?.data.contents.display
+                        data?.data.contents.display || data?.data?.contents?.discount
                             ? styles.accommodate
                             : styles.noaccommodate
                     }`}

@@ -6,6 +6,27 @@ import { useState, useCallback } from 'react';
 import { asciiFromNumberBytes } from '../../utils/stringUtils';
 import { type DataType } from './ObjectResultType';
 
+import couponImg05 from '../../assets/images/sui_coupon_5.png';
+import couponImg10 from '../../assets/images/sui_coupon_10.png';
+import couponImg15 from '../../assets/images/sui_coupon_15.png';
+import couponImg20 from '../../assets/images/sui_coupon_20.png';
+import couponImg25 from '../../assets/images/sui_coupon_25.png';
+import couponImg30 from '../../assets/images/sui_coupon_30.png';
+import couponImg35 from '../../assets/images/sui_coupon_35.png';
+import couponImg40 from '../../assets/images/sui_coupon_40.png';
+import couponImg45 from '../../assets/images/sui_coupon_45.png';
+import couponImg50 from '../../assets/images/sui_coupon_50.png';
+import couponImg55 from '../../assets/images/sui_coupon_55.png';
+import couponImg60 from '../../assets/images/sui_coupon_60.png';
+import couponImg65 from '../../assets/images/sui_coupon_65.png';
+import couponImg70 from '../../assets/images/sui_coupon_70.png';
+import couponImg75 from '../../assets/images/sui_coupon_75.png';
+import couponImg80 from '../../assets/images/sui_coupon_80.png';
+import couponImg85 from '../../assets/images/sui_coupon_85.png';
+import couponImg90 from '../../assets/images/sui_coupon_90.png';
+import couponImg95 from '../../assets/images/sui_coupon_95.png';
+import couponImg100 from '../../assets/images/sui_coupon_100.png';
+
 import styles from './ObjectResult.module.css';
 
 //TO DO - display smart contract info; see mock_data.json for example smart contract data
@@ -32,6 +53,42 @@ function SmartContractBox({ data }: { data: DataType }) {
                          </div>
                      );
                      */
+}
+
+const discountToImg: Record<number, string> = {
+    5: couponImg05,
+    10: couponImg10,
+    15: couponImg15,
+    20: couponImg20,
+    25: couponImg25,
+    30: couponImg30,
+    35: couponImg35,
+    40: couponImg40,
+    45: couponImg45,
+    50: couponImg50,
+    55: couponImg55,
+    60: couponImg60,
+    65: couponImg65,
+    70: couponImg70,
+    75: couponImg75,
+    80: couponImg80,
+    85: couponImg85,
+    90: couponImg90,
+    95: couponImg95,
+    100: couponImg100,
+};
+
+function getImg({data}: DataType) {
+    const display = data.contents?.display;
+    if (display) {
+        if (typeof display === 'object' && 'bytes' in display) {
+            return asciiFromNumberBytes(display.bytes);
+        }
+        return display;
+    } else if (data.contents?.discount) {
+        return discountToImg[data.contents.discount] || couponImg05
+    }
+    return null;
 }
 
 function DisplayBox({ data }: { data: DataType }) {
@@ -62,10 +119,14 @@ function DisplayBox({ data }: { data: DataType }) {
         return <SmartContractBox data={data} />;
     }
 
-    if (contents.display) {
-        if (typeof contents.display === 'object' && 'bytes' in contents.display)
-            contents.display = asciiFromNumberBytes(contents.display.bytes);
+    // hack to display sui coupon image
+    const showDisplayBox = !!(data.data?.contents?.display || data.data?.contents?.discount);
 
+    if (!showDisplayBox) {
+        return null;
+    }
+    let image = getImg(data);
+    if (image) {
         return (
             <div className={styles['display-container']}>
                 {!hasDisplayLoaded && (
@@ -81,7 +142,7 @@ function DisplayBox({ data }: { data: DataType }) {
                         className={styles.imagebox}
                         style={imageStyle}
                         alt="NFT"
-                        src={contents.display}
+                        src={image}
                         onLoad={handleImageLoad}
                         onError={handleImageFail}
                     />
