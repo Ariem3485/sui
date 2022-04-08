@@ -1,8 +1,6 @@
 // Copyright (c) 2022, Mysten Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-import { tryGetRpcSetting } from './rpcSetting';
-
 export class SuiRpcClient {
     public readonly host: string;
 
@@ -175,5 +173,5 @@ export interface AddressObjectSummary {
     objectDigest: string;
 }
 
-const rpcUrl = tryGetRpcSetting() ?? 'https://demo-rpc.sui.io';
+const rpcUrl = '/api';
 export const DefaultRpcClient = new SuiRpcClient(rpcUrl);
