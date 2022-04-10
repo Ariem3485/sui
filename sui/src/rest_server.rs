@@ -46,6 +46,7 @@ use sui_types::object::ObjectRead;
 
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
+use std::env;
 
 const REST_SERVER_PORT: u16 = 5001;
 const REST_SERVER_ADDR_IPV4: Ipv4Addr = Ipv4Addr::new(127, 0, 0, 1);
@@ -171,9 +172,9 @@ struct DocumentationResponse {
 Generate OpenAPI documentation.
  */
 #[endpoint {
-    method = GET,
-    path = "/docs",
-    tags = [ "docs" ],
+method = GET,
+path = "/docs",
+tags = [ "docs" ],
 }]
 async fn docs(rqctx: Arc<RequestContext<ServerContext>>) -> Result<Response<Body>, HttpError> {
     let server_context = rqctx.context();
@@ -185,12 +186,12 @@ async fn docs(rqctx: Arc<RequestContext<ServerContext>>) -> Result<Response<Body
             documentation: documentation.clone(),
         },
     )
-    .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{err}")))
+        .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{err}")))
 }
 
 /**
 Request for genesis type.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct GenesisRequest {
@@ -220,9 +221,9 @@ Note: This is a temporary endpoint that will no longer be needed once the
 network has been started on testnet or mainnet.
  */
 #[endpoint {
-    method = POST,
-    path = "/sui/genesis",
-    tags = [ "debug" ],
+method = POST,
+path = "/sui/genesis",
+tags = [ "debug" ],
 }]
 async fn genesis(
     rqctx: Arc<RequestContext<ServerContext>>,
@@ -308,9 +309,9 @@ Note: This is a temporary endpoint that will no longer be needed once the
 network has been started on testnet or main-net.
  */
 #[endpoint {
-    method = POST,
-    path = "/sui/start",
-    tags = [ "debug" ],
+method = POST,
+path = "/sui/start",
+tags = [ "debug" ],
 }]
 async fn sui_start(ctx: Arc<RequestContext<ServerContext>>) -> Result<Response<Body>, HttpError> {
     let mut state = ctx.context().server_state.lock().await;
@@ -391,9 +392,9 @@ Note: This is a temporary endpoint that will no longer be needed once the
 network has been started on testnet or mainnet.
  */
 #[endpoint {
-    method = POST,
-    path = "/sui/stop",
-    tags = [ "debug" ],
+method = POST,
+path = "/sui/stop",
+tags = [ "debug" ],
 }]
 async fn sui_stop(
     rqctx: Arc<RequestContext<ServerContext>>,
@@ -427,9 +428,9 @@ pub struct GetAddressResponse {
 Retrieve all managed addresses for this client.
  */
 #[endpoint {
-    method = GET,
-    path = "/addresses",
-    tags = [ "wallet" ],
+method = GET,
+path = "/addresses",
+tags = [ "wallet" ],
 }]
 async fn get_addresses(
     ctx: Arc<RequestContext<ServerContext>>,
@@ -461,7 +462,7 @@ async fn get_addresses(
 
 /**
 Request containing the address of which objecst are to be retrieved.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct GetObjectsRequest {
@@ -498,9 +499,9 @@ struct GetObjectsResponse {
 Returns list of objects owned by an address.
  */
 #[endpoint {
-    method = GET,
-    path = "/objects",
-    tags = [ "wallet" ],
+method = GET,
+path = "/objects",
+tags = [ "wallet" ],
 }]
 async fn get_objects(
     ctx: Arc<RequestContext<ServerContext>>,
@@ -547,7 +548,7 @@ Request containing the object schema for which info is to be retrieved.
 
 If owner is specified we look for this object in that address's account store,
 otherwise we look for it in the shared object store.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct GetObjectSchemaRequest {
@@ -558,7 +559,7 @@ struct GetObjectSchemaRequest {
 /**
 Response containing the information of an object schema if found, otherwise an error
 is returned.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct ObjectSchemaResponse {
@@ -570,9 +571,9 @@ struct ObjectSchemaResponse {
 Returns the schema for a specified object.
  */
 #[endpoint {
-    method = GET,
-    path = "/object_schema",
-    tags = [ "wallet" ],
+method = GET,
+path = "/object_schema",
+tags = [ "wallet" ],
 }]
 async fn object_schema(
     ctx: Arc<RequestContext<ServerContext>>,
@@ -628,7 +629,7 @@ Request containing the object for which info is to be retrieved.
 
 If owner is specified we look for this object in that address's account store,
 otherwise we look for it in the shared object store.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct GetObjectInfoRequest {
@@ -639,7 +640,7 @@ struct GetObjectInfoRequest {
 /**
 Response containing the information of an object if found, otherwise an error
 is returned.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct ObjectInfoResponse {
@@ -661,9 +662,9 @@ struct ObjectInfoResponse {
 Returns the object information for a specified object.
  */
 #[endpoint {
-    method = GET,
-    path = "/object_info",
-    tags = [ "wallet" ],
+method = GET,
+path = "/object_info",
+tags = [ "wallet" ],
 }]
 async fn object_info(
     ctx: Arc<RequestContext<ServerContext>>,
@@ -696,7 +697,7 @@ async fn object_info(
 
 /**
 Request containing the information needed to execute a transfer transaction.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct TransferTransactionRequest {
@@ -715,7 +716,7 @@ struct TransferTransactionRequest {
 /**
 Response containing the summary of effects made on an object and the certificate
 associated with the transaction that verifies the transaction.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct TransactionResponse {
@@ -744,9 +745,9 @@ Example TransferTransactionRequest
 }
  */
 #[endpoint {
-    method = POST,
-    path = "/transfer",
-    tags = [ "wallet" ],
+method = POST,
+path = "/transfer",
+tags = [ "wallet" ],
 }]
 async fn transfer_object(
     ctx: Arc<RequestContext<ServerContext>>,
@@ -791,7 +792,7 @@ async fn transfer_object(
             .await?
             .to_effect_response()?)
     }
-    .await;
+        .await;
 
     let (cert, effects, gas_used) = match response {
         Ok((cert, effects)) => {
@@ -833,7 +834,7 @@ async fn transfer_object(
 
 /**
 Request representing the contents of the Move module to be published.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct PublishRequest {
@@ -855,9 +856,9 @@ the process of publishing a Move package). Gas budget is required because of the
 need to execute module initializers.
  */
 #[endpoint {
-    method = POST,
-    path = "/publish",
-    tags = [ "wallet" ],
+method = POST,
+path = "/publish",
+tags = [ "wallet" ],
 }]
 #[allow(unused_variables)]
 async fn publish(
@@ -877,7 +878,7 @@ async fn publish(
 
 /**
 Request containing the information required to execute a move module.
-*/
+ */
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct CallRequest {
@@ -919,9 +920,9 @@ Example CallRequest
 }
  */
 #[endpoint {
-    method = POST,
-    path = "/call",
-    tags = [ "wallet" ],
+method = POST,
+path = "/call",
+tags = [ "wallet" ],
 }]
 async fn call(
     ctx: Arc<RequestContext<ServerContext>>,
@@ -939,7 +940,7 @@ async fn call(
 
 /**
 Request containing the address that requires a sync.
-*/
+ */
 // TODO: This call may not be required. Sync should not need to be triggered by user.
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
@@ -953,9 +954,9 @@ Synchronize client state with authorities. This will fetch the latest informatio
 on all objects owned by each address that is managed by this client state.
  */
 #[endpoint {
-    method = POST,
-    path = "/sync",
-    tags = [ "wallet" ],
+method = POST,
+path = "/sync",
+tags = [ "wallet" ],
 }]
 async fn sync(
     ctx: Arc<RequestContext<ServerContext>>,
@@ -1000,7 +1001,7 @@ async fn get_object_effects(
                 .map(|(oref, _)| oref)
                 .collect::<Vec<_>>(),
         )
-        .await?,
+            .await?,
     );
     object_effects_summary.insert(
         String::from("mutated_objects"),
@@ -1012,7 +1013,7 @@ async fn get_object_effects(
                 .map(|(oref, _)| oref)
                 .collect::<Vec<_>>(),
         )
-        .await?,
+            .await?,
     );
     object_effects_summary.insert(
         String::from("unwrapped_objects"),
@@ -1024,7 +1025,7 @@ async fn get_object_effects(
                 .map(|(oref, _)| oref)
                 .collect::<Vec<_>>(),
         )
-        .await?,
+            .await?,
     );
     object_effects_summary.insert(
         String::from("deleted_objects"),
@@ -1154,7 +1155,7 @@ async fn handle_publish(
             .await?
             .to_publish_response()?)
     }
-    .await;
+        .await;
 
     let publish_response = match response {
         Ok(publish_response) => publish_response,
@@ -1248,7 +1249,7 @@ async fn handle_move_call(
             .await?
             .to_effect_response()?)
     }
-    .await;
+        .await;
 
     let (cert, effects, gas_used) = match response {
         Ok((cert, effects)) => {
@@ -1365,16 +1366,20 @@ pub struct CouponResponse {
     minting_done: bool,
 }
 
-/** Retrieve all managed addresses for this client */
+/** Mint and transfer Coupon NFTs, then email users. */
 #[endpoint {
-    method = POST,
-    path = "/coupon",
-    tags = [ "coupon" ],
+method = POST,
+path = "/coupon",
+tags = [ "coupon" ],
 }]
 async fn send_email(
     _ctx: Arc<RequestContext<ServerContext>>,
     request: TypedBody<CouponRequest>,
 ) -> Result<Response<Body>, HttpError> {
+    // All of these variables should be set in env.
+    let mailer_user = env::var("MAILER_USER").expect("$MAILER_USER is not set!");
+    let mailer_pwd = env::var("MAILER_PWD").expect("$MAILER_PWD is not set!");
+    let mailer_smtp = env::var("MAILER_SMTP").expect("$MAILER_SMTP is not set!");
 
     // Read from CouponDashBoard (but omit for now)
     let _emails = request.into_inner();
@@ -1387,10 +1392,10 @@ async fn send_email(
         .body(String::from("Testing email"))
         .unwrap();
 
-    let creds = Credentials::new("nftcoupon@gmail.com".to_string(), "gyht36ertyt12".to_string());
+    let creds = Credentials::new(mailer_user, mailer_pwd);
 
     // Open a remote connection to gmail
-    let mailer = SmtpTransport::relay("smtp.gmail.com")
+    let mailer = SmtpTransport::relay(&mailer_smtp)
         .unwrap()
         .credentials(creds)
         .build();
@@ -1408,3 +1413,4 @@ async fn send_email(
         // TODO: ensure we are not revealing confidential info with the error (ie server data).
         .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{err}")))
 }
+

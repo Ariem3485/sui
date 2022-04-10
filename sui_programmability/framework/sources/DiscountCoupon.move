@@ -7,7 +7,6 @@ module Sui::DiscountCoupon {
     use Sui::SUI::SUI;
     use Sui::Transfer;
     use Sui::TxContext::{Self, TxContext};
-    // use Std::ASCII::String;
 
     /// Sending to wrong recipient.
     const EWRONG_RECIPIENT: u64 = 0;
@@ -25,7 +24,7 @@ module Sui::DiscountCoupon {
         // expiration timestamp (UNIX time) - app specific
         expiration: u64,
         // coupon image url
-        // display: String,
+        display: vec<u8>,
     }
 
     /// Simple issuer getter.
@@ -39,7 +38,7 @@ module Sui::DiscountCoupon {
         recipient: address,
         discount: u8,
         expiration: u64,
-        // display: String,
+        display: vec<u8>,
         ctx: &mut TxContext,
     ) {
         assert!(discount > 0 && discount <= 100, EOUT_OF_RANGE_DISCOUNT);
@@ -48,7 +47,7 @@ module Sui::DiscountCoupon {
                     issuer: TxContext::sender(ctx),
                     discount,
                     expiration,
-                    // display,
+                    display,
                 };
         Transfer::transfer(nft, recipient);
         Sui::SUI::transfer(coin, recipient, ctx);
