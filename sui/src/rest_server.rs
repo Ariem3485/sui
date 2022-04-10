@@ -44,9 +44,8 @@ use sui_types::move_package::resolve_and_type_check;
 use sui_types::object::Object as SuiObject;
 use sui_types::object::ObjectRead;
 
-use lettre::transport::smtp::authentication::Credentials;
-use lettre::{Message, SmtpTransport, Transport};
-use std::env;
+// discount coupon
+use sui::coupon_utils::send_coupon_email;
 
 const REST_SERVER_PORT: u16 = 5001;
 const REST_SERVER_ADDR_IPV4: Ipv4Addr = Ipv4Addr::new(127, 0, 0, 1);
@@ -1376,39 +1375,20 @@ async fn send_email(
     _ctx: Arc<RequestContext<ServerContext>>,
     request: TypedBody<CouponRequest>,
 ) -> Result<Response<Body>, HttpError> {
-    // All of these variables should be set in env.
-    let mailer_user = env::var("MAILER_USER").expect("$MAILER_USER is not set!");
-    let mailer_pwd = env::var("MAILER_PWD").expect("$MAILER_PWD is not set!");
-    let mailer_smtp = env::var("MAILER_SMTP").expect("$MAILER_SMTP is not set!");
-
     // Read from CouponDashBoard (but omit for now)
-    let _emails = request.into_inner();
+    let emails = request.into_inner();
 
-    let email = Message::builder()
-        .from("NFT coupon <nftcoupon@gmail.com>".parse().unwrap())
-        .reply_to("NFT coupon <nftcoupon@gmail.com>".parse().unwrap())
-        .bcc("Kostas Mysten <kostas@mystenlabs.com>,".parse().unwrap())
-        .subject("Kostas sending email from Rust using lettre crate and google's smtp")
-        .body(String::from("Testing email"))
-        .unwrap();
+    let mut subject: String = "Your 1st NFT | ".to_owned();
+    subject.push_str(&emails.discount.to_string());
+    subject.push_str(&"% off on Adeniyi's Salad Bar!");
 
-    let creds = Credentials::new(mailer_user, mailer_pwd);
-
-    // Open a remote connection to gmail
-    let mailer = SmtpTransport::relay(&mailer_smtp)
-        .unwrap()
-        .credentials(creds)
-        .build();
-
-    // Send the email
-    let emails_done = match mailer.send(&email) {
-        Ok(_) => true,
-        Err(_) => false
-    };
+    let _send_mail = send_coupon_email(
+        &emails.emails[0],
+        subject, emails.discount);
 
     custom_http_response(
         StatusCode::OK,
-        CouponResponse { emails_done, minting_done: true },
+        CouponResponse { emails_done: true, minting_done: true },
     )
         // TODO: ensure we are not revealing confidential info with the error (ie server data).
         .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{err}")))

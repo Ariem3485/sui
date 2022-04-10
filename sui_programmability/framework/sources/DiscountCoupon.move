@@ -24,7 +24,7 @@ module Sui::DiscountCoupon {
         // expiration timestamp (UNIX time) - app specific
         expiration: u64,
         // coupon image url
-        display: vec<u8>,
+        display: vector<u8>,
     }
 
     /// Simple issuer getter.
@@ -38,7 +38,7 @@ module Sui::DiscountCoupon {
         recipient: address,
         discount: u8,
         expiration: u64,
-        display: vec<u8>,
+        display: vector<u8>,
         ctx: &mut TxContext,
     ) {
         assert!(discount > 0 && discount <= 100, EOUT_OF_RANGE_DISCOUNT);
