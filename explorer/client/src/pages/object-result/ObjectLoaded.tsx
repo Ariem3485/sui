@@ -200,7 +200,8 @@ function ObjectLoaded({ data }: { data: DataType }) {
                 <DisplayBox data={data} />
                 <div
                     className={`${styles.textbox} ${
-                        data?.data.contents.display || data?.data?.contents?.discount
+                        data?.data.contents.display ||
+                        data?.data?.contents?.discount
                             ? styles.accommodate
                             : styles.noaccommodate
                     }`}

@@ -78,15 +78,15 @@ const discountToImg: Record<number, string> = {
     100: couponImg100,
 };
 
-function getImg({data}: DataType) {
+function getImg({ data }: DataType) {
     const display = data.contents?.display;
-    if (display) {
+    if (data.contents?.discount) {
+        return discountToImg[data.contents.discount] || couponImg05;
+    } else if (display) {
         if (typeof display === 'object' && 'bytes' in display) {
             return asciiFromNumberBytes(display.bytes);
         }
         return display;
-    } else if (data.contents?.discount) {
-        return discountToImg[data.contents.discount] || couponImg05
     }
     return null;
 }
@@ -120,7 +120,9 @@ function DisplayBox({ data }: { data: DataType }) {
     }
 
     // hack to display sui coupon image
-    const showDisplayBox = !!(data.data?.contents?.display || data.data?.contents?.discount);
+    const showDisplayBox = !!(
+        data.data?.contents?.display || data.data?.contents?.discount
+    );
 
     if (!showDisplayBox) {
         return null;
