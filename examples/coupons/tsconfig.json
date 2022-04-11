@@ -25,7 +25,8 @@
             "@hooks/*": ["src/app/utility/hooks/*"],
             "@utils": ["src/app/utility/Utils"],
             "@styles/*": ["src/app/@core/scss/*"],
-            "@layouts/*": ["src/app/@core/layouts/*"]
+            "@layouts/*": ["src/app/@core/layouts/*"],
+            "@images/*": ["src/assets/images/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

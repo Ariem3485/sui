@@ -21,6 +21,50 @@ import { Plus, Minus } from 'react-feather';
 import Flatpickr from 'react-flatpickr';
 import toast from 'react-hot-toast';
 
+import couponImg10 from '@images/sui_coupon_10.png';
+import couponImg100 from '@images/sui_coupon_100.png';
+import couponImg15 from '@images/sui_coupon_15.png';
+import couponImg20 from '@images/sui_coupon_20.png';
+import couponImg25 from '@images/sui_coupon_25.png';
+import couponImg30 from '@images/sui_coupon_30.png';
+import couponImg35 from '@images/sui_coupon_35.png';
+import couponImg40 from '@images/sui_coupon_40.png';
+import couponImg45 from '@images/sui_coupon_45.png';
+import couponImg05 from '@images/sui_coupon_5.png';
+import couponImg50 from '@images/sui_coupon_50.png';
+import couponImg55 from '@images/sui_coupon_55.png';
+import couponImg60 from '@images/sui_coupon_60.png';
+import couponImg65 from '@images/sui_coupon_65.png';
+import couponImg70 from '@images/sui_coupon_70.png';
+import couponImg75 from '@images/sui_coupon_75.png';
+import couponImg80 from '@images/sui_coupon_80.png';
+import couponImg85 from '@images/sui_coupon_85.png';
+import couponImg90 from '@images/sui_coupon_90.png';
+import couponImg95 from '@images/sui_coupon_95.png';
+
+const discountToImg: Record<number, string> = {
+    5: couponImg05.src,
+    10: couponImg10.src,
+    15: couponImg15.src,
+    20: couponImg20.src,
+    25: couponImg25.src,
+    30: couponImg30.src,
+    35: couponImg35.src,
+    40: couponImg40.src,
+    45: couponImg45.src,
+    50: couponImg50.src,
+    55: couponImg55.src,
+    60: couponImg60.src,
+    65: couponImg65.src,
+    70: couponImg70.src,
+    75: couponImg75.src,
+    80: couponImg80.src,
+    85: couponImg85.src,
+    90: couponImg90.src,
+    95: couponImg95.src,
+    100: couponImg100.src,
+};
+
 export type NewCampaignModalProps = {};
 
 function NewCampaign({}: NewCampaignModalProps) {
@@ -186,6 +230,7 @@ function NewCampaign({}: NewCampaignModalProps) {
                                     value={formik.values.expiration}
                                     disabled={saveInProgress}
                                     onClose={handleExpirationBlur}
+                                    options={{ minDate: 'today' }}
                                 />
                                 <Input
                                     hidden
@@ -273,6 +318,25 @@ function NewCampaign({}: NewCampaignModalProps) {
                                             <div key={i}>{error}</div>
                                         ))}
                                 </FormFeedback>
+                            </Col>
+                        </Row>
+                        <Row className="mb-3">
+                            <Label sm="3" for="new-campaign-coupon-preview">
+                                Coupon preview:
+                            </Label>
+                            <Col sm="9">
+                                {discountToImg[formik.values.discount] && (
+                                    <img
+                                        src={
+                                            discountToImg[
+                                                formik.values.discount
+                                            ]
+                                        }
+                                        alt="Coupon image"
+                                        className="rounded"
+                                        height="150"
+                                    />
+                                )}
                             </Col>
                         </Row>
                         <Row>
