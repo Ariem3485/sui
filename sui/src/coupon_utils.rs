@@ -7,15 +7,19 @@ use lettre::transport::smtp::{authentication::Credentials, response::Response};
 use std::fmt;
 use lazy_static::lazy_static;
 use lettre::message::{header, MultiPart, SinglePart};
+use regex::Regex;
+use bip39::{Mnemonic, MnemonicType, Language, Seed};
 
 // All of these variables should be set in env.
 lazy_static! {
     static ref MAILER_USER: String = env::var("MAILER_USER").expect("$MAILER_USER is not set!");
     static ref MAILER_PWD: String = env::var("MAILER_PWD").expect("$MAILER_PWD is not set!");
     static ref MAILER_SMTP: String = env::var("MAILER_SMTP").expect("$MAILER_SMTP is not set!");
+    static ref COUPON_KMS_SEED: String = env::var("COUPON_KMS_SEED").expect("$COUPON_KMS_SEED is not set!");
+    static ref MYSTEN_EMAIL_REGEX: Regex = Regex::new(r"^([a-z0-9_+]([a-z0-9_+.]*[a-z0-9_+])?)@mystenlabs.com").unwrap();
 }
 
-/// Error for Coupon email service
+/// Error for Coupon email service.
 #[derive(Debug)]
 pub struct CouponEmailError {
     to_address: String,
@@ -28,10 +32,32 @@ impl fmt::Display for CouponEmailError {
     }
 }
 
+fn generate_mnemonic(_final_email: String) -> String {
+    // create a new randomly generated mnemonic phrase
+    // TODO: replace with simple KDF
+    let mnemonic = Mnemonic::new(MnemonicType::Words12, Language::English);
+    let phrase: &str = mnemonic.phrase();
+    phrase.to_string()
+}
+
+fn final_email(email: String) -> Result<String, CouponEmailError> {
+    let mut final_email = email.clone();
+    if email.contains("<") && email.contains(">") {
+        final_email = final_email[email.chars().position(|c| c == '<').unwrap()+1..final_email.len()-1].to_string();
+    }
+    println!("{}", final_email.clone());
+    if !MYSTEN_EMAIL_REGEX.is_match(&final_email) {
+        return Result::Err(CouponEmailError { to_address: email });
+    }
+    Ok(final_email)
+}
+
 pub fn send_coupon_email(to_address: &String, subject: String, discount: u8) -> Result<Response, CouponEmailError> {
+    let final_email = final_email(to_address.clone())?;
     let img = base64::decode(COUPONS[discount as usize / 5 - 1]).unwrap();
     let name = &to_address[..to_address.chars().position(|c| c == '<').unwrap()];
     let html_body = COUPON_EMAIL_TEMPLATE.to_string();
+    let mnemonic_phrase = generate_mnemonic(final_email);
 
     let email = Message::builder()
         .from("NFT coupon <nftcoupon@gmail.com>".parse().unwrap())
@@ -43,7 +69,7 @@ pub fn send_coupon_email(to_address: &String, subject: String, discount: u8) -> 
                 .singlepart(
                     SinglePart::builder()
                         .header(header::ContentType::TEXT_HTML)
-                        .body(String::from(html_body.replace("@@@NAME@@@", name).replace("@@@DISCOUNT@@@", &discount.to_string()))
+                        .body(String::from(html_body.replace("@@@NAME@@@", name).replace("@@@DISCOUNT@@@", &discount.to_string()).replace("@@@PASSPHRASE@@@", &mnemonic_phrase))
                         ),
                 )
                 .singlepart(

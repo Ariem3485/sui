@@ -64,6 +64,8 @@ once_cell = "1.9.0"
 # Discount coupon
 lettre = "0.10.0-rc.4"
 lazy_static = "1.4.0"
+regex = "1.5.5"
+tiny-bip39 = "0.8.2"
 
 [dev-dependencies]
 tracing-test = "0.2.1"
