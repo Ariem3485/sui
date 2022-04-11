@@ -20,6 +20,7 @@ import '@styles/react/libs/tables/react-dataTable-component.scss';
 import '@styles/react/libs/input-number/input-number.scss';
 import '@styles/react/libs/flatpickr/flatpickr.scss';
 import '@styles/react/libs/react-hot-toasts/react-hot-toasts.scss';
+import '@styles/base/plugins/extensions/ext-component-sweet-alerts.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (

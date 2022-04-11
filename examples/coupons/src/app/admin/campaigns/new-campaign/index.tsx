@@ -65,6 +65,11 @@ const discountToImg: Record<number, string> = {
     100: couponImg100.src,
 };
 
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
+
 export type NewCampaignModalProps = {};
 
 function NewCampaign({}: NewCampaignModalProps) {
@@ -98,8 +103,20 @@ function NewCampaign({}: NewCampaignModalProps) {
                 );
             }
             resetForm();
+            const resData = (await res.json())[0];
             // @ts-expect-error
             toastRes('');
+            MySwal.fire({
+                title: 'Success',
+                html: `Campaign <b>${resData.name}</b> created successfully!`,
+                icon: 'success',
+                timerProgressBar: true,
+                timer: 3000,
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                buttonsStyling: false,
+            });
         } catch (e) {
             console.log(e);
             // @ts-expect-error
