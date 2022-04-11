@@ -96,9 +96,9 @@ pub trait GatewayAPI {
         recipient: SuiAddress,
     ) -> Result<TransactionData, anyhow::Error>;
 
-    /// Synchronise account state with a random authorities, updates all object_ids
+    /// Synchronise account state with a random authority, updates all object_ids
     /// from account_addr, request only goes out to one authority.
-    /// this method doesn't guarantee data correctness, caller will have to handle potential byzantine authority
+    /// this method doesn't guarantee data correctness, caller will have to handle potential byzantine authority.
     async fn sync_account_state(&self, account_addr: SuiAddress) -> Result<(), anyhow::Error>;
 
     /// Call move functions in the module in the given package, with args supplied

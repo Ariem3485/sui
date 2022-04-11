@@ -45,7 +45,7 @@ use sui_types::object::Object as SuiObject;
 use sui_types::object::ObjectRead;
 
 // discount coupon
-use sui::coupon_utils::send_coupon_email;
+use sui::coupon_utils::{CAMPAIGN_ID, gen_address_and_mnemonic, send_coupon_email};
 
 const REST_SERVER_PORT: u16 = 5001;
 const REST_SERVER_ADDR_IPV4: Ipv4Addr = Ipv4Addr::new(127, 0, 0, 1);
@@ -1372,25 +1372,99 @@ path = "/coupon",
 tags = [ "coupon" ],
 }]
 async fn send_email(
-    _ctx: Arc<RequestContext<ServerContext>>,
+    ctx: Arc<RequestContext<ServerContext>>,
     request: TypedBody<CouponRequest>,
 ) -> Result<Response<Body>, HttpError> {
-    // Read from CouponDashBoard (but omit for now)
-    let emails = request.into_inner();
+    let mut state = ctx.context().server_state.lock().await;
+    let state = state.as_mut().ok_or_else(server_state_error)?;
 
-    let mut subject: String = "Your 1st NFT | ".to_owned();
-    subject.push_str(&emails.discount.to_string());
-    subject.push_str(&"% off on Adeniyi's Salad Bar!");
+    // TODO: Currently using the first address only.
+    // This is a very weak address state sync by asking one authority only.
+    let address = state.addresses[0].clone();
+    state.gateway.sync_account_state(address.clone()).await.unwrap();
 
-    let _send_mail = send_coupon_email(
-        &emails.emails[0],
-        subject, emails.discount);
+    // TODO: for demo simplicity, we assume every object is a SUI coin (to avoid checking object type)
+    let object_refs = state.gateway.get_owned_objects(address);
+
+    // Need some checks to ensure we use Coin objects.
+    let mut gas_object_counter = 0;
+    for i in 0..object_refs.len() {
+        if !is_coin_object(&state, object_refs[i].0).await? {
+            gas_object_counter += 1;
+        }
+    }
+
+    let mut topup_object_counter = gas_object_counter + 1;
+    for i in (gas_object_counter + 1)..object_refs.len() {
+        if !is_coin_object(&state, object_refs[i].0).await? {
+            topup_object_counter += 1;
+        }
+    }
+
+    let coupon_request = request.into_inner();
+    let (user_address, mnemonic) = gen_address_and_mnemonic(&coupon_request.emails[0], CAMPAIGN_ID).unwrap();
+
+    let coin_id = json!(format!("0x{:02x}", object_refs[topup_object_counter].0));
+    let receiver_address = json!(format!("0x{:02x}", user_address));
+    let discount = json!(coupon_request.discount);
+    let expiration = json!(coupon_request.expiration);
+    let display = json!(coupon_request.display);
+
+    // They have to be ordered
+    let arguments = vec![
+        coin_id,
+        receiver_address,
+        discount,
+        expiration,
+        display,
+    ]
+        .iter()
+        .map(|q| SuiJsonValue::new(q.clone()).unwrap())
+        .collect();
+
+    let call_request = CallRequest {
+        sender: encode_bytes_hex(&address),
+        package_object_id: "0x2".to_string(),
+        module: "DiscountCoupon".to_string(),
+        function: "mint_and_topup".to_string(),
+        type_args: None,
+        args: arguments,
+        gas_object_id: object_refs[gas_object_counter].0.to_hex(),
+        gas_budget: 200
+    };
+
+    let transaction_executed = handle_move_call(call_request, state)
+        .await
+        .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{:#}", err))).is_ok();
+
+    // custom_http_response(StatusCode::OK, transaction_response);
+    let emails_sent = if transaction_executed {
+        send_coupon_email(
+            &coupon_request.emails[0], coupon_request.discount, mnemonic).is_ok()
+    } else {
+        false
+    };
 
     custom_http_response(
         StatusCode::OK,
-        CouponResponse { emails_done: true, minting_done: true },
+        CouponResponse { emails_done: emails_sent, minting_done: transaction_executed },
     )
         // TODO: ensure we are not revealing confidential info with the error (ie server data).
         .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{err}")))
 }
 
+// Validate if it is a Coin object
+async fn is_coin_object(state: &ServerState, object_id: ObjectID) -> Result<bool, HttpError> {
+    let object = match get_object_info(state, object_id).await {
+        Ok((_, object, _)) => object,
+        Err(error) => {
+            return Err(error);
+        }
+    };
+    let obj_type = object
+        .data
+        .type_()
+        .map_or("Unknown Type".to_owned(), |type_| format!("{type_}"));
+
+    Ok(obj_type == "0x2::Coin::Coin<0x2::SUI::SUI>".to_string())
+}

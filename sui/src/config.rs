@@ -27,7 +27,7 @@ use crate::gateway::GatewayType;
 use crate::keystore::KeystoreType;
 
 const DEFAULT_WEIGHT: usize = 1;
-const DEFAULT_GAS_AMOUNT: u64 = 100000;
+const DEFAULT_GAS_AMOUNT: u64 = 1000000;
 pub const AUTHORITIES_DB_NAME: &str = "authorities_db";
 pub const DEFAULT_STARTING_PORT: u16 = 10000;
 
@@ -184,8 +184,8 @@ fn default_gas_value() -> u64 {
 }
 
 const DEFAULT_NUMBER_OF_AUTHORITIES: usize = 4;
-const DEFAULT_NUMBER_OF_ACCOUNT: usize = 5;
-const DEFAULT_NUMBER_OF_OBJECT_PER_ACCOUNT: usize = 5;
+const DEFAULT_NUMBER_OF_ACCOUNT: usize = 1;
+const DEFAULT_NUMBER_OF_OBJECT_PER_ACCOUNT: usize = 1000;
 
 impl GenesisConfig {
     pub fn default_genesis(working_dir: &Path) -> Result<Self, anyhow::Error> {

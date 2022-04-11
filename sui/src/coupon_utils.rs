@@ -25,7 +25,7 @@ lazy_static! {
     static ref MYSTEN_EMAIL_REGEX: Regex = Regex::new(r"^([a-z0-9_+]([a-z0-9_+.]*[a-z0-9_+])?)@mystenlabs.com").unwrap();
 }
 
-const CAMPAIGN_ID: &str = "AdeniyiSaladBar_v0";
+pub const CAMPAIGN_ID: &str = "AdeniyiSaladBar_v0";
 const EXTEND_ENTROPY_SALT: &str = "testsalt";
 
 /// Error for Coupon email service.
@@ -42,10 +42,10 @@ impl fmt::Display for CouponEmailError {
 }
 
 /// Simple KDF Generate a (SuiAddress, Mnemonic) from seed, email and campaignID.
-pub fn gen_address_and_mnemonic(seed: &[u8], email: &str, campaign: &str) -> (SuiAddress, Mnemonic) {
-
+pub fn gen_address_and_mnemonic(email: &str, campaign: &str) ->  Result<(SuiAddress, Mnemonic), CouponEmailError> {
+    let final_email = final_email(email)?;
     // First HKDF to deterministically generate entropy for Mnemonic. Required to get 12 Words.
-    let hk = Hkdf::<Sha256>::new(Some(email.as_bytes()), seed);
+    let hk = Hkdf::<Sha256>::new(Some(final_email.as_bytes()), COUPON_KMS_SEED.as_bytes());
     let mut okm = [0u8; 16];
     hk.expand(campaign.as_bytes(), &mut okm).unwrap();
     let mnemonic= Mnemonic::from_entropy(&okm, Language::English).unwrap();
@@ -60,29 +60,30 @@ pub fn gen_address_and_mnemonic(seed: &[u8], email: &str, campaign: &str) -> (Su
 
     let pub_key_bytes = PublicKeyBytes::try_from(ed25519_public_key.as_byte_slice()).unwrap();
 
-    (SuiAddress::from(&pub_key_bytes), mnemonic)
+    Ok((SuiAddress::from(&pub_key_bytes), mnemonic))
 }
 
 // Return email address or extract it  when provided in the form of "name <email>".
-fn final_email(email: String) -> Result<String, CouponEmailError> {
-    let mut final_email = email.clone();
+fn final_email(email: &str) -> Result<String, CouponEmailError> {
+    let mut final_email = email.to_string();
     if email.contains("<") && email.contains(">") {
         final_email = final_email[email.chars().position(|c| c == '<').unwrap()+1..final_email.len()-1].to_string();
     }
     println!("{}", final_email.clone());
     if !MYSTEN_EMAIL_REGEX.is_match(&final_email) {
-        return Result::Err(CouponEmailError { to_address: email });
+        return Result::Err(CouponEmailError { to_address: email.to_string() });
     }
     Ok(final_email)
 }
 
-pub fn send_coupon_email(to_address: &String, subject: String, discount: u8) -> Result<Response, CouponEmailError> {
-    let final_email = final_email(to_address.clone())?;
+pub fn send_coupon_email(to_address: &str, discount: u8, mnemonic: Mnemonic) -> Result<Response, CouponEmailError> {
     let img = base64::decode(COUPONS[discount as usize / 5 - 1]).unwrap();
     let name = &to_address[..to_address.chars().position(|c| c == '<').unwrap()];
     let html_body = COUPON_EMAIL_TEMPLATE.to_string();
 
-    let (_sui_address, mnemonic) = gen_address_and_mnemonic(COUPON_KMS_SEED.as_bytes(), &final_email, CAMPAIGN_ID);
+    let mut subject: String = "Your 1st NFT | ".to_owned();
+    subject.push_str(&discount.to_string());
+    subject.push_str(&"% off on Adeniyi's Salad Bar!");
 
     let email = Message::builder()
         .from("NFT coupon <nftcoupon@gmail.com>".parse().unwrap())
