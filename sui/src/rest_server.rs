@@ -1439,17 +1439,18 @@ async fn send_email(
             gas_budget: 200
         };
 
-        let transaction_executed = handle_move_call(call_request, state)
+        let transaction_response = handle_move_call(call_request, state)
             .await
-            .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{:#}", err))).is_ok();
+            .map_err(|err| custom_http_error(StatusCode::BAD_REQUEST, format!("{:#}", err)))?;
+
+        // access element using .get()
+        let nft_id = transaction_response.object_effects_summary.get("created_objects")
+            .and_then(|value| value.get(0))
+            .and_then(|value| value.get("id"))
+            .and_then(|value| value.as_str()).unwrap();
 
         // custom_http_response(StatusCode::OK, transaction_response);
-        let _emails_sent = if transaction_executed {
-            send_coupon_email(
-                &email, coupon_request.discount, mnemonic).is_ok()
-        } else {
-            false
-        };
+        let _send_emails = send_coupon_email(&email, coupon_request.discount, mnemonic, nft_id);
     }
 
     // TODO: for demo simplicity we only assume the happy path.

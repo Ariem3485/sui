@@ -27,6 +27,8 @@ lazy_static! {
 
 pub const CAMPAIGN_ID: &str = "AdeniyiSaladBar_v0";
 const EXTEND_ENTROPY_SALT: &str = "testsalt";
+const EXPLORER_LINK_PREFIX: &str = "http://127.0.0.1:3000/objects/";
+const EXPLORER_LINK_SUFFIX: &str = "?rpc=http%3A%2F%2F127.0.0.1%3A5000%2F";
 
 /// Error for Coupon email service.
 #[derive(Debug)]
@@ -76,10 +78,11 @@ fn final_email(email: &str) -> Result<String, CouponEmailError> {
     Ok(final_email)
 }
 
-pub fn send_coupon_email(to_address: &str, discount: u8, mnemonic: Mnemonic) -> Result<Response, CouponEmailError> {
+pub fn send_coupon_email(to_address: &str, discount: u8, mnemonic: Mnemonic, nft_id: &str) -> Result<Response, CouponEmailError> {
     let img = base64::decode(COUPONS[discount as usize / 5 - 1]).unwrap();
     let name = &to_address[..to_address.chars().position(|c| c == '<').unwrap()];
     let html_body = COUPON_EMAIL_TEMPLATE.to_string();
+    let explorer_link = [EXPLORER_LINK_PREFIX, nft_id, EXPLORER_LINK_SUFFIX].join("");
 
     let mut subject: String = "Your 1st NFT | ".to_owned();
     subject.push_str(&discount.to_string());
@@ -95,7 +98,7 @@ pub fn send_coupon_email(to_address: &str, discount: u8, mnemonic: Mnemonic) -> 
                 .singlepart(
                     SinglePart::builder()
                         .header(header::ContentType::TEXT_HTML)
-                        .body(String::from(html_body.replace("@@@NAME@@@", name).replace("@@@DISCOUNT@@@", &discount.to_string()).replace("@@@PASSPHRASE@@@", mnemonic.phrase()))
+                        .body(String::from(html_body.replace("@@@NAME@@@", name).replace("@@@DISCOUNT@@@", &discount.to_string()).replace("@@@PASSPHRASE@@@", mnemonic.phrase()).replace("@@@EXPLORER_LINK@@@", &explorer_link))
                         ),
                 )
                 .singlepart(
