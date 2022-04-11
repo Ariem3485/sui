@@ -3,11 +3,8 @@
 
 import { useState, useCallback } from 'react';
 
-import { asciiFromNumberBytes } from '../../utils/stringUtils';
-import { type DataType } from './ObjectResultType';
-
-import couponImg05 from '../../assets/images/sui_coupon_5.png';
 import couponImg10 from '../../assets/images/sui_coupon_10.png';
+import couponImg100 from '../../assets/images/sui_coupon_100.png';
 import couponImg15 from '../../assets/images/sui_coupon_15.png';
 import couponImg20 from '../../assets/images/sui_coupon_20.png';
 import couponImg25 from '../../assets/images/sui_coupon_25.png';
@@ -15,6 +12,7 @@ import couponImg30 from '../../assets/images/sui_coupon_30.png';
 import couponImg35 from '../../assets/images/sui_coupon_35.png';
 import couponImg40 from '../../assets/images/sui_coupon_40.png';
 import couponImg45 from '../../assets/images/sui_coupon_45.png';
+import couponImg05 from '../../assets/images/sui_coupon_5.png';
 import couponImg50 from '../../assets/images/sui_coupon_50.png';
 import couponImg55 from '../../assets/images/sui_coupon_55.png';
 import couponImg60 from '../../assets/images/sui_coupon_60.png';
@@ -25,7 +23,9 @@ import couponImg80 from '../../assets/images/sui_coupon_80.png';
 import couponImg85 from '../../assets/images/sui_coupon_85.png';
 import couponImg90 from '../../assets/images/sui_coupon_90.png';
 import couponImg95 from '../../assets/images/sui_coupon_95.png';
-import couponImg100 from '../../assets/images/sui_coupon_100.png';
+import { asciiFromNumberBytes } from '../../utils/stringUtils';
+
+import type { DataType } from './ObjectResultType';
 
 import styles from './ObjectResult.module.css';
 
@@ -94,8 +94,6 @@ function getImg({ data }: DataType) {
 function DisplayBox({ data }: { data: DataType }) {
     const [hasDisplayLoaded, setHasDisplayLoaded] = useState(false);
     const [hasFailedToLoad, setHasFailedToLoad] = useState(false);
-
-    const contents = data.data.contents;
 
     const imageStyle = hasDisplayLoaded ? {} : { display: 'none' };
     const handleImageLoad = useCallback(
