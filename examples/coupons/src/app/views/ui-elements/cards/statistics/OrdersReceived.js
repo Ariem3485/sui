@@ -1,12 +1,10 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-
 import { Package } from 'react-feather';
+import { useSelector } from 'react-redux';
 
-// ** Custom Components
 import StatsWithAreaChart from '@components/widgets/stats/StatsWithAreaChart';
 
 const OrdersReceived = ({ kFormatter, warning }) => {
+    const { total } = useSelector((state) => state.invoice);
     const data = {
         series: [
             {
@@ -15,7 +13,7 @@ const OrdersReceived = ({ kFormatter, warning }) => {
             },
         ],
         analyticsData: {
-            orders: 19070,
+            orders: total,
         },
     };
 

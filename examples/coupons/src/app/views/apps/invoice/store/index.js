@@ -134,26 +134,41 @@ const data = [
     ),
 ];
 
-const allData = [...data, ...data, ...data, ...data];
-
 const paginateArray = (array, perPage, page) =>
     array.slice((page - 1) * perPage, page * perPage);
 
 export const getData = createAsyncThunk(
     'appInvoice/getData',
     async (params) => {
+        const allCoupons = (await (await fetch('/api/campaigns')).json()).map(
+            (aCoupon) =>
+                makeUser(
+                    aCoupon.id,
+                    aCoupon.status,
+                    aCoupon.name,
+                    aCoupon.email,
+                    '', // TODO: image based on email
+                    aCoupon.discount,
+                    new Date(aCoupon.mintDate).toLocaleDateString(),
+                    aCoupon.claimed
+                )
+        );
         const response = {
             data: {
-                invoices: paginateArray(allData, params.perPage, params.page),
-                allData,
-                total: allData.length,
+                invoices: paginateArray(
+                    allCoupons,
+                    params.perPage,
+                    params.page
+                ),
+                allData: allCoupons,
+                total: allCoupons.length,
             },
         };
         return {
             params,
             data: response.data.invoices,
             allData: response.data.allData,
-            totalPages: response.data.total,
+            total: response.data.total,
         };
     }
 );
@@ -173,14 +188,20 @@ export const appInvoiceSlice = createSlice({
         total: 0,
         params: {},
         allData: [],
+        totalUsers: 0,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getData.fulfilled, (state, action) => {
-            state.data = action.payload.data;
-            state.allData = action.payload.allData;
-            state.total = action.payload.totalPages;
-            state.params = action.payload.params;
+            const { data, allData, total, params } = action.payload;
+            state.data = data;
+            state.allData = allData;
+            state.total = total;
+            state.params = params;
+            state.totalUsers = allData.reduce((acc, aCoupon) => {
+                acc.add(aCoupon.client.companyEmail);
+                return acc;
+            }, new Set()).size;
         });
     },
 });

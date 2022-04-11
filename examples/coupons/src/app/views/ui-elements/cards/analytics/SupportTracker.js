@@ -73,7 +73,7 @@ const SupportTracker = (props) => {
             stroke: {
                 dashArray: 8,
             },
-            labels: ['Completed Tickets'],
+            labels: ['Submitted Coupons'],
         },
         series = [83];
 

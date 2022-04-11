@@ -13,6 +13,7 @@
         "prettier:fix:watch": "npm run prettier:fix && onchange '**' --exclude-path .gitignore -- prettier -w --ignore-unknown {{file}}"
     },
     "dependencies": {
+        "@faker-js/faker": "^6.1.2",
         "@reduxjs/toolkit": "^1.8.1",
         "animate.css": "^4.1.1",
         "bootstrap": "^5.1.3",

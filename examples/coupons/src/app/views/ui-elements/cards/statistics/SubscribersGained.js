@@ -6,8 +6,10 @@ import { Users } from 'react-feather';
 
 // ** Custom Components
 import StatsWithAreaChart from '@components/widgets/stats/StatsWithAreaChart';
+import { useSelector } from 'react-redux';
 
 const SubscribersGained = ({ kFormatter }) => {
+    const { totalUsers } = useSelector((state) => state.invoice);
     const data = {
         series: [
             {
@@ -16,7 +18,7 @@ const SubscribersGained = ({ kFormatter }) => {
             },
         ],
         analyticsData: {
-            subscribers: 92600,
+            subscribers: totalUsers,
         },
     };
 
