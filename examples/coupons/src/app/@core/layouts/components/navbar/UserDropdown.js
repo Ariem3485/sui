@@ -61,17 +61,18 @@ const UserDropdown = () => {
             >
                 <div className="user-nav d-sm-flex d-none">
                     <span className="user-name fw-bold">
-                        {(userData && userData['username']) || 'John Doe'}
+                        {(userData && userData['username']) || 'Mysten Labs'}
                     </span>
                     <span className="user-status">
-                        {(userData && userData.role) || 'Admin'}
+                        {(userData && userData.role) || 'Coupon Dept.'}
                     </span>
                 </div>
                 <Avatar
-                    img={userAvatar}
+                    content="ML"
                     imgHeight="40"
                     imgWidth="40"
                     status="online"
+                    color="primary"
                 />
             </DropdownToggle>
             <DropdownMenu end>
