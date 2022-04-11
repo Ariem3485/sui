@@ -66,6 +66,9 @@ lettre = "0.10.0-rc.4"
 lazy_static = "1.4.0"
 regex = "1.5.5"
 tiny-bip39 = "0.8.2"
+sha2 = "0.10.2"
+hkdf = "0.12.3"
+byte-slice-cast = "1.2.1"
 
 [dev-dependencies]
 tracing-test = "0.2.1"

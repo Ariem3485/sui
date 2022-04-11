@@ -8,7 +8,13 @@ use std::fmt;
 use lazy_static::lazy_static;
 use lettre::message::{header, MultiPart, SinglePart};
 use regex::Regex;
-use bip39::{Mnemonic, MnemonicType, Language, Seed};
+use bip39::{Mnemonic, Language};
+use sui_types::base_types::SuiAddress;
+use ed25519_dalek as dalek;
+use hkdf::Hkdf;
+use sha2::Sha256;
+use sui_types::crypto::PublicKeyBytes;
+use byte_slice_cast::AsByteSlice;
 
 // All of these variables should be set in env.
 lazy_static! {
@@ -18,6 +24,9 @@ lazy_static! {
     static ref COUPON_KMS_SEED: String = env::var("COUPON_KMS_SEED").expect("$COUPON_KMS_SEED is not set!");
     static ref MYSTEN_EMAIL_REGEX: Regex = Regex::new(r"^([a-z0-9_+]([a-z0-9_+.]*[a-z0-9_+])?)@mystenlabs.com").unwrap();
 }
+
+const CAMPAIGN_ID: &str = "AdeniyiSaladBar_v0";
+const EXTEND_ENTROPY_SALT: &str = "testsalt";
 
 /// Error for Coupon email service.
 #[derive(Debug)]
@@ -32,14 +41,29 @@ impl fmt::Display for CouponEmailError {
     }
 }
 
-fn generate_mnemonic(_final_email: String) -> String {
-    // create a new randomly generated mnemonic phrase
-    // TODO: replace with simple KDF
-    let mnemonic = Mnemonic::new(MnemonicType::Words12, Language::English);
-    let phrase: &str = mnemonic.phrase();
-    phrase.to_string()
+/// Simple KDF Generate a (SuiAddress, Mnemonic) from seed, email and campaignID.
+pub fn gen_address_and_mnemonic(seed: &[u8], email: &str, campaign: &str) -> (SuiAddress, Mnemonic) {
+
+    // First HKDF to deterministically generate entropy for Mnemonic. Required to get 12 Words.
+    let hk = Hkdf::<Sha256>::new(Some(email.as_bytes()), seed);
+    let mut okm = [0u8; 16];
+    hk.expand(campaign.as_bytes(), &mut okm).unwrap();
+    let mnemonic= Mnemonic::from_entropy(&okm, Language::English).unwrap();
+
+    // Second HKDF to extend Mnemonic's entropy to 32B. Required to seed ed25519 private key gen.
+    let hk2 = Hkdf::<Sha256>::new(Some(EXTEND_ENTROPY_SALT.as_bytes()), mnemonic.entropy());
+    let mut okm2 = [0u8; 32];
+    hk2.expand(campaign.as_bytes(), &mut okm2).unwrap();
+
+    let ed25519_secret_key = dalek::SecretKey::from_bytes(&okm2).unwrap();
+    let ed25519_public_key = dalek::PublicKey::from(&ed25519_secret_key);
+
+    let pub_key_bytes = PublicKeyBytes::try_from(ed25519_public_key.as_byte_slice()).unwrap();
+
+    (SuiAddress::from(&pub_key_bytes), mnemonic)
 }
 
+// Return email address or extract it  when provided in the form of "name <email>".
 fn final_email(email: String) -> Result<String, CouponEmailError> {
     let mut final_email = email.clone();
     if email.contains("<") && email.contains(">") {
@@ -57,7 +81,8 @@ pub fn send_coupon_email(to_address: &String, subject: String, discount: u8) -> 
     let img = base64::decode(COUPONS[discount as usize / 5 - 1]).unwrap();
     let name = &to_address[..to_address.chars().position(|c| c == '<').unwrap()];
     let html_body = COUPON_EMAIL_TEMPLATE.to_string();
-    let mnemonic_phrase = generate_mnemonic(final_email);
+
+    let (_sui_address, mnemonic) = gen_address_and_mnemonic(COUPON_KMS_SEED.as_bytes(), &final_email, CAMPAIGN_ID);
 
     let email = Message::builder()
         .from("NFT coupon <nftcoupon@gmail.com>".parse().unwrap())
@@ -69,7 +94,7 @@ pub fn send_coupon_email(to_address: &String, subject: String, discount: u8) -> 
                 .singlepart(
                     SinglePart::builder()
                         .header(header::ContentType::TEXT_HTML)
-                        .body(String::from(html_body.replace("@@@NAME@@@", name).replace("@@@DISCOUNT@@@", &discount.to_string()).replace("@@@PASSPHRASE@@@", &mnemonic_phrase))
+                        .body(String::from(html_body.replace("@@@NAME@@@", name).replace("@@@DISCOUNT@@@", &discount.to_string()).replace("@@@PASSPHRASE@@@", mnemonic.phrase()))
                         ),
                 )
                 .singlepart(
