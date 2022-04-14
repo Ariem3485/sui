@@ -30,7 +30,7 @@ use sui::rest_gateway::requests::{
 };
 use sui::rest_gateway::responses::{
     custom_http_error, HttpResponseOk, JsonResponse, NamedObjectRef, ObjectResponse,
-    ObjectSchemaResponse, TransactionBytes,
+    ObjectSchemaResponse, TransactionBytes, GetTransactionsResponse,
 };
 use sui::{sui_config_dir, SUI_GATEWAY_CONFIG};
 use sui_core::gateway_state::gateway_responses::TransactionResponse;
@@ -38,7 +38,6 @@ use sui_core::gateway_state::{GatewayClient, GatewayState};
 use sui_types::base_types::*;
 use sui_types::crypto::{self, EmptySignInfo};
 use sui_types::crypto::SignableBytes;
-use sui_types::error::SuiError;
 use sui_types::messages::{Transaction, TransactionData, TransactionEnvelope};
 use sui_types::object::Object as SuiObject;
 use sui_types::object::ObjectRead;
@@ -129,6 +128,7 @@ fn create_api() -> ApiDescription<ServerContext> {
     api.register(sync_account_state).unwrap();
     api.register(execute_transaction).unwrap();
     api.register(get_transaction_details).unwrap();
+    api.register(get_recent_transactions_route).unwrap();
 
     api
 }
@@ -646,6 +646,33 @@ async fn get_transaction_details(
     Ok(HttpResponseOk(JsonResponse(result)))
 }
 
+// get recent transactions
+#[endpoint {
+    method = GET,
+    path = "/api/tx/recent",
+    tags = [ "API" ]
+}]
+async fn get_recent_transactions_route (
+    ctx: Arc<RequestContext<ServerContext>>,
+) -> Result<HttpResponseOk<JsonResponse<GetTransactionsResponse>>, HttpError> {
+
+    let gateway = ctx.context().gateway.lock().await;
+
+    match get_recent_transactions(&gateway, 20) {
+        Ok(data) => {
+            let txs = match serde_json::to_value(data) {
+                Ok(v) => v,
+                Err(err) => {
+                    return Err(custom_http_error(StatusCode::INTERNAL_SERVER_ERROR, err.to_string()))
+                },
+            };
+
+            Ok(HttpResponseOk(JsonResponse(GetTransactionsResponse { txs })))
+        },
+        Err(err) => return Err(err),
+    }
+}
+
 
 async fn get_transaction(
     gateway: &GatewayClient,
@@ -656,6 +683,20 @@ async fn get_transaction(
         Err(err) => Err(custom_http_error(
             StatusCode::NOT_FOUND,
             format!("Error while getting transaction details: {err:?}"),
+        )),
+    }
+}
+
+
+fn get_recent_transactions(
+    gateway: &GatewayClient,
+    count: u64,
+) -> Result<Vec<(u64, TransactionDigest)>, HttpError> {
+    match gateway.get_recent_transactions(count) {
+        Ok(data) => Ok(data),
+        Err(err) => Err(custom_http_error(
+            StatusCode::NOT_FOUND,
+            format!("Error while getting recent transactions: {err:?}"),
         )),
     }
 }

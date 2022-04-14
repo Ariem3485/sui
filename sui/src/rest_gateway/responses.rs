@@ -93,6 +93,13 @@ impl TransactionBytes {
     }
 }
 
+/// Response containing the information of recent transactions if found, otherwise an error
+#[derive(Deserialize, Serialize, JsonSchema)]
+pub struct GetTransactionsResponse {
+    /// JSON representation of the object schema
+    pub txs: serde_json::Value
+}
+
 /// Response containing the information of an object schema if found, otherwise an error
 /// is returned.
 #[derive(Deserialize, Serialize, JsonSchema)]
