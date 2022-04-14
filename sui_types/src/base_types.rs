@@ -214,6 +214,19 @@ impl TransactionDigest {
         Self(bytes)
     }
 
+    pub fn from_slice(slice: &[u8]) -> Result<Self, SuiError> {
+        if slice.len() != TRANSACTION_DIGEST_LENGTH {
+            return Err(SuiError::WrongLengthTransactionDigest {
+                len: slice.len(),
+                expected: TRANSACTION_DIGEST_LENGTH
+            });
+        }
+
+        let mut bytes = [0u8; 32];
+        bytes.copy_from_slice(slice);
+        Ok(TransactionDigest::new(bytes))
+    }
+
     /// A digest we use to signify the parent transaction was the genesis,
     /// ie. for an object there is no parent digest.
     ///

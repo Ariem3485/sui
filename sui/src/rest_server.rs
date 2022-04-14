@@ -615,7 +615,7 @@ async fn handle_move_call(
         .await
 }
 
-/// on all objects owned by each address that is managed by this client state.
+// get transaction details for a given transaction digest
 #[endpoint {
     method = GET,
     path = "/api/tx",
@@ -629,19 +629,14 @@ async fn get_transaction_details(
     let gateway = ctx.context().gateway.lock().await;
     let query: GetTransactionDetailsRequest = query.into_inner();
 
-    let digest_u8 = query.digest.as_bytes();
-
-    if digest_u8.len() != TRANSACTION_DIGEST_LENGTH {
-        let sui_err = SuiError::WrongLengthTransactionDigest {
-            len: digest_u8.len(),
-            expected: TRANSACTION_DIGEST_LENGTH
-        };
-        return Err(custom_http_error(StatusCode::BAD_REQUEST, sui_err.to_string()))
-    }
-
-    let mut digest_fixu8 = [0u8; 32];
-    digest_fixu8.copy_from_slice(digest_u8);
-    let digest = TransactionDigest::new(digest_fixu8);
+    let trimmed_digest = query.digest.replace("0x", "");
+    let digest_u8 = trimmed_digest.as_bytes();
+    let digest = match TransactionDigest::from_slice(digest_u8) {
+        Ok(d) => d,
+        Err(err) => {
+            return Err(custom_http_error(StatusCode::BAD_REQUEST, err.to_string()))
+        }
+    };
 
     let result = match get_transaction(&gateway, digest).await {
         Ok(tx_env) => tx_env,
