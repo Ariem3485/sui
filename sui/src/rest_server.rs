@@ -38,6 +38,7 @@ use sui_core::gateway_state::{GatewayClient, GatewayState};
 use sui_types::base_types::*;
 use sui_types::crypto::{self, EmptySignInfo};
 use sui_types::crypto::SignableBytes;
+use sui_types::error::SuiError;
 use sui_types::messages::{Transaction, TransactionData, TransactionEnvelope};
 use sui_types::object::Object as SuiObject;
 use sui_types::object::ObjectRead;
@@ -629,6 +630,15 @@ async fn get_transaction_details(
     let query: GetTransactionDetailsRequest = query.into_inner();
 
     let digest_u8 = query.digest.as_bytes();
+
+    if digest_u8.len() != TRANSACTION_DIGEST_LENGTH {
+        let sui_err = SuiError::WrongLengthTransactionDigest {
+            len: digest_u8.len(),
+            expected: TRANSACTION_DIGEST_LENGTH
+        };
+        return Err(custom_http_error(StatusCode::BAD_REQUEST, sui_err.to_string()))
+    }
+
     let mut digest_fixu8 = [0u8; 32];
     digest_fixu8.copy_from_slice(digest_u8);
     let digest = TransactionDigest::new(digest_fixu8);

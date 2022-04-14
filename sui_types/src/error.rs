@@ -136,6 +136,11 @@ pub enum SuiError {
     InvalidAddress,
     #[error("Invalid transaction digest.")]
     InvalidTransactionDigest,
+    #[error("Transaction digest must be {expected:?} bytes, but received {len:?}")]
+    WrongLengthTransactionDigest {
+        len: usize,
+        expected: usize
+    },
     #[error(
         "Invalid Object digest for object {object_id:?}. Expected digest : {expected_digest:?}."
     )]
