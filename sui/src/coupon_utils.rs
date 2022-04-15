@@ -28,7 +28,7 @@ lazy_static! {
 pub const CAMPAIGN_ID: &str = "AdeniyiSaladBar_v0";
 const EXTEND_ENTROPY_SALT: &str = "testsalt";
 const EXPLORER_LINK_PREFIX: &str = "http://24.5.51.185:3000/objects/";
-const EXPLORER_LINK_SUFFIX: &str = "?rpc=http%3A%2F%2F127.0.0.1%3A5000%2F";
+const _EXPLORER_LINK_SUFFIX: &str = "?rpc=http%3A%2F%2F127.0.0.1%3A5000%2F";
 
 /// Error for Coupon email service.
 #[derive(Debug)]
