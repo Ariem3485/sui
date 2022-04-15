@@ -8,7 +8,7 @@ The objective is to offer a tool for merchants that incentivizes and helps their
 on-boarding experience, by removing the account and passphrase generation friction, which usually demotivates 
 the average non-technical person from entering the crypto space in the first place. 
 
-## Why crypto on-boarding usually fails?
+## Why crypto on-boarding is slow?
 There have been many attempts in the past to measure blockchain user on-boarding success rates, but many of them 
 introduce even more complex protocols and technical terms, such as lazy minting, layer-2 solutions, custodial services 
 (where the self-sovereignty concept is unfortunately absent) and MetaMask self-custody wallets via mnemonics. What is 
@@ -52,7 +52,7 @@ Additionally, we are working in a multi-signer batch transaction model, which wi
 owning the required Sui gas amount. We expect that because of Sui's costs per transaction, many 3rd party service will 
 be willing to help users move their assets by tipping the user transaction with the gas required. This extension is WIP.
 
-## Sui Coupon
+## Application Components
 This project required the implementation or enhancements to the following 5 high-level components:
 * the Move implementation of a simple Coupon NFT, available at [`DiscountCoupon`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/sui_programmability/framework/sources/DiscountCoupon.move)
 * a new Rest server end-point to support the `mint_and_topup` coupon POST request, available at [`rest_server.rs`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/sui/src/rest_server.rs)
@@ -62,21 +62,21 @@ This project required the implementation or enhancements to the following 5 high
 
 **Fig.1 Coupon Issuing -  Dashboard Main** 
 
-<img src="screenshots/coupon_dashboard_main-min.png" width="800">
+<img src="screenshots/coupon_dashboard_main-min.png" width="800" alt="Sui Coupon Dashboard Main">
 
 **Fig.2 Coupon Issuing -  Dashboard Minting Form**
 
-<img src="screenshots/coupon_dashboard_mint-min.png" width="800">
+<img src="screenshots/coupon_dashboard_mint-min.png" width="800" alt="Sui Coupon Dashboard Mint">
 
 **Fig.3 Coupon Email**
 
-<img src="screenshots/coupon_email-min.png" width="800">
+<img src="screenshots/coupon_email-min.png" width="800" alt="Sui Coupon Email">
 
 **Fig.4 Coupon Explorer View**
 
-<img src="screenshots/coupon_explorer-min.png" width="800">
+<img src="screenshots/coupon_explorer-min.png" width="800" alt="Sui Coupon Explorer">
 
-## Get Started
+## Getting Started
 
 **Install Rust's cargo**
 
@@ -92,7 +92,9 @@ git clone --branch sui-coupon-v0 https://github.com/MystenLabs/sui.git
 
 [`Node JS installation`](https://nodejs.org/en/download/)
 
-**Before running**
+---
+**Prerequisites - Before running**
+
 Set the following path variables, i.e., to temporarily set the in a MAC do:
 
 ```coupon_explorer-min
@@ -110,6 +112,7 @@ Replace `<P>` with your email password, i.e., `smtp.gmail.com`
 
 Replace `<K>` with a random seed string, i.e., `fdashkfjs7987fds`
 
+---
 ## Execute Sui Coupons locally
 
 ### Rust Server (runs on port 5001)
@@ -137,7 +140,7 @@ Note: You can stop the rest server by:
 ```
 curl --location --request POST 'http://127.0.0.1:5001/sui/stop’
 ```
-
+---
 ### Dashboard (runs on port 3001)
 Under `sui` directory run:
 ```
@@ -146,7 +149,7 @@ npm i --force
 npm run build
 npm start -- -p 3001
 ```
-
+---
 ### Explorer (runs on port 3000)
 Under `sui` directory run:
 ```
