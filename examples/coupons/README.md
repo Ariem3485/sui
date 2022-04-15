@@ -43,9 +43,9 @@ opening any wallet app. We expect that these social elements will boost word of 
 From the merchant's point of view, note that in this demo we utilize deterministic key generation, where each merchant 
 only needs a single secret key (`seed`) to deterministically generate the mnemonic phrase for every user. The key 
 management is as easy as possible by only requiring to protect the secret seed, because every user-mnemonic can always 
-be derived whenever required. 
+be re-computed if ever required. 
 
-Merchants who want to follow a mint-and-forget policy, they could even delete the `seed` 
+Merchants who want to follow a *mint-and-forget* policy, they could even delete the `seed` 
 after minting and e-mailing users. Obviously in the above scenario user mnemonic recovery will not be possible, but at 
 the same time the merchant is not requiring to run (or be considered) a custody service.
 
