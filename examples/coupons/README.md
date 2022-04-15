@@ -60,12 +60,21 @@ This project required the implementation or enhancements to the following 5 high
 * a Node JS server + frontend for the Coupon issuing Dashboard, available at [`examples/coupons/`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/examples/coupons/)
 * small updates to sui-explorer for NFT coupon templated show-casing, available at  [`explorer/client/`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/explorer/client/).
 
-![Sui Coupons DashBoard Main](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/examples/coupons/screenshots/coupon_dashboard_main-min.png)
-![Sui Coupons DashBoard Mint](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/examples/coupons/screenshots/coupon_dashboard_mint-min.png)
-![Sui Coupons Email](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/examplescoupons/screenshots/coupon_email-min.png)
-![Sui Coupons Explorer](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/examples/coupons/screenshots/coupon_explorer-min.png)
+**Fig.1 Coupon Issuing -  Dashboard Main** 
 
-More screenshots of the Sui coupons application: [Sui Coupon hackathon_slides](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/examples/coupons/sui_coupons_slides.pdf 'User Flow')
+<img src="screenshots/coupon_dashboard_main-min.png" width="800">
+
+**Fig.2 Coupon Issuing -  Dashboard Minting Form**
+
+<img src="screenshots/coupon_dashboard_mint-min.png" width="800">
+
+**Fig.3 Coupon Email**
+
+<img src="screenshots/coupon_email-min.png" width="800">
+
+**Fig.4 Coupon Explorer View**
+
+<img src="screenshots/coupon_explorer-min.png" width="800">
 
 ## Get Started
 
@@ -86,7 +95,7 @@ git clone --branch sui-coupon-v0 https://github.com/MystenLabs/sui.git
 **Before running**
 Set the following path variables, i.e., to temporarily set the in a MAC do:
 
-```
+```coupon_explorer-min
 export MAILER_SMTP=<S>
 export MAILER_USER=<U>
 export MAILER_PWD=<P>         
