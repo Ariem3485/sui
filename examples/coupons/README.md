@@ -1,7 +1,7 @@
 # Sui Coupon Demo
 
 Sui Coupons is a PoC 1-week hackathon project that demonstrates the effectiveness of combining the expressivity features
-of the Move language, with Sui's unique design ans speed, in order to provide a novel Web3.0 user on-boarding mechanism 
+of the Move language, with Sui's unique design and speed, in order to provide a novel Web3.0 user on-boarding mechanism 
 via NFT coupon air-drops.
 
 The objective is to offer a tool for merchants that incentivizes and helps their users to have a smooth blockchain
@@ -39,18 +39,23 @@ their first on-chain NFT. Now, users who expect to spend their coupon are motiva
 their mnemonic (or use QR-code). Interestingly, everyone can socially share their NFT-link with friends, even before 
 opening any wallet app. We expect that these social elements will boost word of mouth and adoption of the coupon NFT idea.
 
-Regarding the merchant, note that in this demo we utilize deterministic key generation, where the merchants only needs a 
-single secret key (seed) to deterministically generate the mnemonic phrase for every user. The key management is as 
-easy as possible by only requiring to protect the secret seed, because every user-mnemonic can always be derived whenever 
-required.  
+## Key Management
+From the merchant's point of view, note that in this demo we utilize deterministic key generation, where each merchant 
+only needs a single secret key (`seed`) to deterministically generate the mnemonic phrase for every user. The key 
+management is as easy as possible by only requiring to protect the secret seed, because every user-mnemonic can always 
+be derived whenever required. 
+
+Merchants who want to follow a mint-and-forget policy, they could even delete the `seed` 
+after minting and e-mailing users. Obviously in the above scenario user mnemonic recovery will not be possible, but at 
+the same time the merchant is not requiring to run (or be considered) a custody service.
 
 ## Sui Coupon extensions
 Note that Sui supports batched transactions from the same account, which is a very useful feature in the coupon scenario 
 as the merchant can force minting for multiple user in one mega transaction.
 
 Additionally, we are working in a multi-signer batch transaction model, which will allow for spending an NFT even without 
-owning the required Sui gas amount. We expect that because of Sui's costs per transaction, many 3rd party service will 
-be willing to help users move their assets by tipping the user transaction with the gas required. This extension is WIP.
+owning the required Sui gas amount. We expect that because of Sui's low costs per transaction, many 3rd party services will 
+be willing to help users move their assets by tipping the user-transaction with the gas required. This extension is WIP.
 
 ## Application Components
 This project required the implementation or enhancements to the following 5 high-level components:
