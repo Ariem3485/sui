@@ -57,11 +57,11 @@ be willing to help users move their assets by tipping the user transaction with 
 
 ## Sui Coupon
 This project required the implementation or enhancements to the following 5 high-level components:
-* the Move implementation of a simple Coupon NFT, available at [`DiscountCoupon`](../../../sui_programmability/framework/sources/DiscountCoupon.move)
-* a new Rest server end-point to support the `mint_and_topup` coupon POST request, available at [`rest_server.rs`](../../../sui/src/rest_server.rs)
-* a basic Rust Mail server to provide the coupon email template and submit emails via smtp server, available at [`coupon_utils.rs`](../../../sui/src/coupon_utils.rs)
-* a Node JS server + frontend for the Coupon issuing Dashboard, available at [`examples/coupons/`](../)
-* small updates to sui-explorer for NFT coupon templated show-casing, available at  [`explorer/client/`](../../../explorer/client/).
+* the Move implementation of a simple Coupon NFT, available at [`DiscountCoupon`](https://github.com/MystenLabs/sui/tree/sui_programmability/framework/sources/DiscountCoupon.move)
+* a new Rest server end-point to support the `mint_and_topup` coupon POST request, available at [`rest_server.rs`](https://github.com/MystenLabs/sui/tree/sui/src/rest_server.rs)
+* a basic Rust Mail server to provide the coupon email template and submit emails via smtp server, available at [`coupon_utils.rs`](https://github.com/MystenLabs/sui/tree/sui/src/coupon_utils.rs)
+* a Node JS server + frontend for the Coupon issuing Dashboard, available at [`examples/coupons/`](https://github.com/MystenLabs/sui/tree/examples/coupons/)
+* small updates to sui-explorer for NFT coupon templated show-casing, available at  [`explorer/client/`](https://github.com/MystenLabs/sui/tree/explorer/client/).
 
 ![user flow](./docs/flow.png 'User Flow')
 
