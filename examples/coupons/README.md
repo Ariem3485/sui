@@ -60,7 +60,12 @@ This project required the implementation or enhancements to the following 5 high
 * a Node JS server + frontend for the Coupon issuing Dashboard, available at [`examples/coupons/`](https://github.com/MystenLabs/sui/tree/examples/coupons/)
 * small updates to sui-explorer for NFT coupon templated show-casing, available at  [`explorer/client/`](https://github.com/MystenLabs/sui/tree/explorer/client/).
 
-Screenshots of the Sui coupons application: [Sui Coupon hackathon_slides](https://github.com/MystenLabs/sui/tree/examples/coupons/sui_coupons_slides.pdf 'User Flow')
+![Sui Coupons DashBoard Main](https://github.com/MystenLabs/sui/tree/examples/coupons/screenshots/coupon_dashboard_main-min.png)
+![Sui Coupons DashBoard Mint](https://github.com/MystenLabs/sui/tree/examples/coupons/screenshots/coupon_dashboard_mint-min.png)
+![Sui Coupons Email](https://github.com/MystenLabs/sui/tree/examples/coupons/screenshots/coupon_email-min.png)
+![Sui Coupons Explorer](https://github.com/MystenLabs/sui/tree/examples/coupons/screenshots/coupon_explorer-min.png)
+
+More screenshots of the Sui coupons application: [Sui Coupon hackathon_slides](https://github.com/MystenLabs/sui/tree/examples/coupons/sui_coupons_slides.pdf 'User Flow')
 
 ## Get Started
 
