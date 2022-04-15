@@ -19,7 +19,7 @@ usually **missed** however is:
 - addresses are not actually visible on-chain before a first transaction occurs (so they miss the feeling of real ownership)
 - in some NFT air-dropping solutions, such as lazy minting, the assets are not available on the blockchain explorers and thus, the users are locked in show-casing platforms.
 - layer-2 minting and related flows are very complex terms for the average user to digest
-- many of the above issues exist because in many blockchains transactions are either expensive or very slow to allow for massive user on-boarding campaigns (i.e., giving away assets)
+- many of the above issues exist because in many blockchains transactions are either expensive or very slow to allow for massive user on-boarding campaigns (i.e., giving away assets).
 
 ## The Sui Coupon protocol
 Sui has unique features by design; it can almost scale indefinitely, offer record numbers in transaction speed and 
@@ -35,15 +35,12 @@ user, it mints a discount coupon NFT and transfers it along with some minimal SU
 address, and it finally emails the Sui explorer-link along with the pre-generated mnemonic to user's email address.  
 
 Each user will receive an email where they can see their mnemonic, but most importantly a link to browse their asset, 
-their first on-chain NFT. 
-
-Now, users who expect to spend their coupon are motivated to enroll to any wallet by entering their mnemonic (or use 
-QR-code). 
-What is interesting is everyone can socially share their NFT-link with friends, even before opening any wallet app. We 
-expect that these social element will help on word of mouth and adoption of the coupon NFT idea.
+their first on-chain NFT. Now, users who expect to spend their coupon are motivated to enroll to any wallet by entering their mnemonic (or use 
+QR-code). Interestingly, everyone can socially share their NFT-link with friends, even before opening any wallet app. We 
+expect that these social elements will boost word of mouth and adoption of the coupon NFT idea.
 
 Regarding the merchant, note that in this demo we utilize deterministic key generation, where the merchants only needs a 
-single secret keyc (seed) to deterministically generate the mnemonic phrase for every user. The key management is as 
+single secret key (seed) to deterministically generate the mnemonic phrase for every user. The key management is as 
 easy as possible by only requiring to protect the secret seed, because every user-mnemonic can always be derived whenever 
 required.  
 
@@ -63,98 +60,83 @@ This project required the implementation or enhancements to the following 5 high
 * a Node JS server + frontend for the Coupon issuing Dashboard, available at [`examples/coupons/`](https://github.com/MystenLabs/sui/tree/examples/coupons/)
 * small updates to sui-explorer for NFT coupon templated show-casing, available at  [`explorer/client/`](https://github.com/MystenLabs/sui/tree/explorer/client/).
 
-![user flow](./docs/flow.png 'User Flow')
+Screenshots of the Sui coupons application: [Sui Coupon hackathon_slides](https://github.com/MystenLabs/sui/tree/examples/coupons/sui_coupons_slides.pdf 'User Flow')
 
 ## Get Started
 
-1. Set up the `.env` file through `cp .env.sample .env`. Rememeber to replace any placeholder value(e.g., ALCHEMY_API_KEY).
-2. Install the dependencies through `npm i`
-3. Start the server through `npm run dev`
-4. The easiest way to test out an endpoint is through [http://localhost:8000/docs](http://localhost:8000/docs) by clicking on "Try it out". No need to manually write curl command or example data.
+**Install Rust's cargo**
 
-## Useful Commands for Development
+Sui is written in Rust, and we are using Cargo to build and manage the dependencies. As a prerequisite, you will need to 
+install Cargo version 1.59.0 or higher in order to build and install Sui on your machine: [`cargo installation`](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 
-**Requirements**: Node 14.0.0 or later version
-
-In the project directory, you can run:
-
-### `npm i`
-
-Before running any of the following scripts `npm i` must run in order to install the necessary dependencies.
-
-### `npm run dev`
-
-Runs the app in the development mode.\
-Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It bundles React in production mode and optimizes the build for the best performance.
-
-### `npm run start`
-
-Run the production version
-
-### `npm run lint`
-
-Run linting check (prettier/eslint/stylelint).
-
-### `npm run lint:fix`
-
-Run linting check but also try to fix any issues.
-
-### `npm run prettier:fix:watch`
-
-Run prettier in watch mode and format any file that changes. (Also runs prettier once in the beginning for all the files)\
-It can be useful during development to format automatically all the files that change.
-
-## Documentation
-
-Swagger UI is available at [http://localhost:8000/docs](http://localhost:8000/docs). The UI will always show the latest documentation during development.
-
-Aside from allowing developers to inspect the documentation, the Swagger UI also allows the developer to quickly test out the endpoint by clicking the "Try it out" button with pre-populated example data.
-
-The syntax for documentation annotation can be found in the [tsoa docs](https://tsoa-community.github.io/docs/getting-started.html).
-
-![swagger ui](./docs/swagger.png 'Swagger UI')
-
-
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Execute Sui Coupons locally:
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
+Download and Install Sui from our GitHub repo
+```
+git clone --branch sui-coupon-v0 https://github.com/MystenLabs/sui.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Install Node JS**
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+[`Node JS installation`](https://nodejs.org/en/download/)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+**Before running**
+Set the following path variables, i.e., to temporarily set the in a MAC do:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```
+export MAILER_SMTP=<S>
+export MAILER_USER=<U>
+export MAILER_PWD=<P>         
+export COUPON_KMS_SEED=<K>
+```
 
-## Learn More
+Replace `<S>` with your smtp, i.e., `smtp.gmail.com`
 
-To learn more about Next.js, take a look at the following resources:
+Replace `<U>` with your email address, i.e., `coupon@gmail.com`
 
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Replace `<P>` with your email password, i.e., `smtp.gmail.com`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Replace `<K>` with a random seed string, i.e., `fdashkfjs7987fds`
 
-## Deploy on Vercel
+## Execute Sui Coupons locally
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Rust Server (runs on port 5001)
+Under `sui` directory run:
+```
+cargo build --release
+./target/release/rest_server
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Open another terminal (or use Postman)
+```
+curl --location --request POST 'http://127.0.0.1:5001/sui/genesis' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"custom": false
+}'
+```
+
+Then run:
+```
+curl --location --request POST 'http://127.0.0.1:5001/sui/start'
+```
+
+Note: You can stop the rest server by:
+```
+curl --location --request POST 'http://127.0.0.1:5001/sui/stop’
+```
+
+### Dashboard (runs on port 3001)
+Under `sui` directory run:
+```
+cd examples/coupon
+npm i --force
+npm run build
+npm start -- -p 3001
+```
+
+### Explorer (runs on port 3000) —
+Under `sui` dir run:
+```
+cd explorer/client
+npm install
+npm start
+```
