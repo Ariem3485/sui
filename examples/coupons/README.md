@@ -133,7 +133,7 @@ npm run build
 npm start -- -p 3001
 ```
 
-### Explorer (runs on port 3000) —
+### Explorer (runs on port 3000)
 Under `sui` dir run:
 ```
 cd explorer/client
