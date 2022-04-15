@@ -26,7 +26,7 @@ use sui::config::PersistedConfig;
 use sui::gateway::GatewayConfig;
 use sui::rest_gateway::requests::{
     CallRequest, GetObjectInfoRequest, GetObjectSchemaRequest, GetObjectsRequest, MergeCoinRequest,
-    PublishRequest, SignedTransaction, SplitCoinRequest, SyncRequest, TransferTransactionRequest, GetTransactionDetailsRequest,
+    PublishRequest, SignedTransaction, SplitCoinRequest, SyncRequest, TransferTransactionRequest, GetTransactionDetailsRequest, GetRecentTransactionsRequest,
 };
 use sui::rest_gateway::responses::{
     custom_http_error, HttpResponseOk, JsonResponse, NamedObjectRef, ObjectResponse,
@@ -654,23 +654,25 @@ async fn get_transaction_details(
 }]
 async fn get_recent_transactions_route (
     ctx: Arc<RequestContext<ServerContext>>,
+    query: Query<GetRecentTransactionsRequest>
 ) -> Result<HttpResponseOk<JsonResponse<GetTransactionsResponse>>, HttpError> {
 
     let gateway = ctx.context().gateway.lock().await;
+    let query: GetRecentTransactionsRequest = query.into_inner();
+    let count = query.count.unwrap_or(20);
 
-    match get_recent_transactions(&gateway, 20) {
-        Ok(data) => {
-            let txs = match serde_json::to_value(data) {
-                Ok(v) => v,
-                Err(err) => {
-                    return Err(custom_http_error(StatusCode::INTERNAL_SERVER_ERROR, err.to_string()))
-                },
-            };
-
-            Ok(HttpResponseOk(JsonResponse(GetTransactionsResponse { txs })))
-        },
+    let result = match get_recent_transactions(&gateway, count) {
+        Ok(data) => data,
         Err(err) => return Err(err),
-    }
+    };
+    let txs = match serde_json::to_value(result) {
+        Ok(val) => val,
+        Err(err) => {
+            return Err(custom_http_error(StatusCode::INTERNAL_SERVER_ERROR, err.to_string()))
+        },
+    };
+
+    Ok(HttpResponseOk(JsonResponse(GetTransactionsResponse { txs })))
 }
 
 

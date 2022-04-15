@@ -150,3 +150,8 @@ pub struct GetTransactionDetailsRequest {
     /// Required; hex string encoding a 32 byte transaction digest
     pub digest: String,
 }
+
+#[derive(Deserialize, Serialize, JsonSchema)]
+pub struct GetRecentTransactionsRequest {
+    pub count: Option<u64>,
+}
