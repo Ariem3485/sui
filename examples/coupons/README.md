@@ -35,9 +35,9 @@ user, it mints a discount coupon NFT and transfers it along with some minimal SU
 address, and it finally emails the Sui explorer-link along with the pre-generated mnemonic to user's email address.  
 
 Each user will receive an email where they can see their mnemonic, but most importantly a link to browse their asset, 
-their first on-chain NFT. Now, users who expect to spend their coupon are motivated to enroll to any wallet by entering their mnemonic (or use 
-QR-code). Interestingly, everyone can socially share their NFT-link with friends, even before opening any wallet app. We 
-expect that these social elements will boost word of mouth and adoption of the coupon NFT idea.
+their first on-chain NFT. Now, users who expect to spend their coupon are motivated to enroll to any wallet by entering 
+their mnemonic (or use QR-code). Interestingly, everyone can socially share their NFT-link with friends, even before 
+opening any wallet app. We expect that these social elements will boost word of mouth and adoption of the coupon NFT idea.
 
 Regarding the merchant, note that in this demo we utilize deterministic key generation, where the merchants only needs a 
 single secret key (seed) to deterministically generate the mnemonic phrase for every user. The key management is as 
@@ -148,7 +148,7 @@ npm start -- -p 3001
 ```
 
 ### Explorer (runs on port 3000)
-Under `sui` dir run:
+Under `sui` directory run:
 ```
 cd explorer/client
 npm install
