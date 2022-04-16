@@ -2,7 +2,7 @@
 
 Sui Coupons is a PoC 1-week hackathon project that demonstrates the effectiveness of combining the expressivity features
 of the Move language, with Sui's unique design and speed, in order to provide a novel Web3.0 user on-boarding mechanism 
-via NFT coupon air-drops.
+via NFT coupon airdrops.
 
 The objective is to offer a tool for merchants that incentivizes and helps their users to have a smooth blockchain
 on-boarding experience, by removing the account and passphrase generation friction, which usually demotivates 
@@ -29,7 +29,7 @@ directly to layer-1 and not externally.
 Sui Coupons take advantage of the aforementioned facts to reasonably solve most of the on-boarding issues, focusing on
 users who never used a blockchain wallet in the past. It fits great to scenarios where in the traditional Web2.0 world 
 assets would be attached to email body anyway, such as discount coupons, subscription passwords and tickets. Sui Coupons 
-enables non-technical users to experience Web3.0 features, get familiar with NFTs, understanding the concept on-chain 
+enable non-technical users to experience Web3.0 features, get familiar with NFTs, understanding the concept on-chain 
 asset ownership and socially share their NFTs even before they engage with wallet functionality.
 
 In Layman's terms the protocol is very simple and works as follows (per user):
