@@ -28,9 +28,14 @@ directly to layer-1 and not externally.
 
 Sui Coupons take advantage of the aforementioned facts to reasonably solve most of the on-boarding issues, focusing on
 users who never used a blockchain wallet in the past. It works great in scenarios where in the traditional Web2.0 world 
-assets would be attached to email body anyway, such as discount coupons, subscription passwords and tickets. Sui Coupons 
-enable non-technical users to experience Web3.0 features, get familiar with NFTs, understanding the concept on-chain 
-asset ownership and socially share their NFTs even before they engage with wallet functionality.
+assets would be attached in clear to email body anyway, such as discount coupons, subscription passwords and tickets. 
+Sui Coupons enable non-technical users to experience Web3.0 features, get familiar with NFTs, understanding the concept 
+on-chain asset ownership and socially share their NFTs even before they engage with wallet functionality. 
+
+In fact, one cannot socially share their personal coupon or ticket in the old Web2.0 world, unless they do photoshop to
+wipe out the coupon/ticket-code. By converting the traditional coupons (or tickets) to owned NFTs, we do NOT need 
+per coupon secrets anymore, because ability to use is now linked to NFT ownership. Thus, Sui Coupons can also be 
+considered a new product/service, not just a Web3.0 transition mechanism.
 
 In Layman's terms the protocol is very simple and works as follows (per user):
 * A merchant issues a coupon in the form of NFT Vs the conventional way of sharing coupon codes.
