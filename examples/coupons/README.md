@@ -21,7 +21,7 @@ usually **missed** however is:
 - layer-2 minting, fraud proofs, zero knowledge proofs and oracles are complex terms for the average user to digest
 - most of the above issues exist because in many blockchains transactions are either expensive or very slow to allow for massive user on-boarding campaigns (i.e., giving away assets).
 
-## The Sui Coupon protocol
+## Coupon and ticket tokenization 
 Sui has unique features by design; it can scale indefinitely, offer record numbers in transaction speed and 
 latency, thus reducing the per-transaction cost, and provide batching which allows for blazing fast airdrops, 
 directly to layer-1 and not externally.
@@ -30,13 +30,17 @@ Sui Coupons take advantage of the aforementioned facts to reasonably solve most 
 users who never used a blockchain wallet in the past. It works great in scenarios where in the traditional Web2.0 world 
 assets would be attached in clear to email body anyway, such as discount coupons, subscription passwords and tickets. 
 Sui Coupons enable non-technical users to experience Web3.0 features, get familiar with NFTs, understanding the concept 
-on-chain asset ownership and socially share their NFTs even before they engage with wallet functionality. 
+of on-chain asset ownership and socially share their NFTs even before they engage with wallet functionality. 
 
 In fact, one cannot socially share their personal coupon or ticket in the old Web2.0 world, unless they do photoshop to
 wipe out the coupon/ticket-code. By converting the traditional coupons (or tickets) to owned NFTs, we do NOT need 
-per coupon secrets anymore, because ability to use is now linked to NFT ownership. Thus, Sui Coupons can also be 
-considered a new product/service, not just a Web3.0 transition mechanism.
+per coupon secrets anymore, because the ability to spend and transfer is now linked to NFT ownership. The proposed 
+concept of *NFT-izing* assets that previously carried some secret information can also be extended to giveaways and 
+lotteries, allowing ticket owners to freely share their *ticketID* or selected lucky number combinations without fear of
+someone reusing their tickets. All in all, Sui Coupons can also be considered a new product/service, not just a Web3.0 
+transition mechanism.
 
+## The Sui Coupon protocol
 In Layman's terms the protocol is very simple and works as follows (per user):
 * A merchant issues a coupon in the form of NFT Vs the conventional way of sharing coupon codes.
 * To achieve this, it creates a Sui account and mnemonic for this user
