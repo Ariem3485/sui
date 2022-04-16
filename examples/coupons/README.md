@@ -27,7 +27,7 @@ latency, thus reducing the per-transaction cost, and provide batching which allo
 directly to layer-1 and not externally.
 
 Sui Coupons take advantage of the aforementioned facts to reasonably solve most of the on-boarding issues, focusing on
-users who never used a blockchain wallet in the past. It fits great to scenarios where in the traditional Web2.0 world 
+users who never used a blockchain wallet in the past. It works great in scenarios where in the traditional Web2.0 world 
 assets would be attached to email body anyway, such as discount coupons, subscription passwords and tickets. Sui Coupons 
 enable non-technical users to experience Web3.0 features, get familiar with NFTs, understanding the concept on-chain 
 asset ownership and socially share their NFTs even before they engage with wallet functionality.
