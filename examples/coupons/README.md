@@ -15,24 +15,29 @@ introduce even more complex protocols and technical terms, such as lazy minting,
 usually **missed** however is:
 - a strong incentive for users to tolerate the time-consuming process of understanding the technical details before they use it
 - a "try me first for free" principle
-- users cannot use an account if it's not already topped up with a minimum amount of coins (required to pay for gas)
-- addresses are not actually visible on-chain before a first transaction occurs (so they miss the feeling of real ownership)
-- in some NFT air-dropping solutions, such as lazy minting, the assets are not available on the blockchain explorers and thus, the users are locked in show-casing platforms.
-- layer-2 minting and related flows are very complex terms for the average user to digest
-- many of the above issues exist because in many blockchains transactions are either expensive or very slow to allow for massive user on-boarding campaigns (i.e., giving away assets).
+- accounts can be used if not already topped up with a minimum coin balance (required to pay for gas)
+- addresses are not visible on-chain before the first transaction occurs (so users miss the feeling of real ownership)
+- in some NFT airdrop solutions, such as lazy minting, the assets are not available on the blockchain explorers and thus, creators are locked in show-casing platforms
+- layer-2 minting, fraud proofs, zero knowledge proofs and oracles are complex terms for the average user to digest
+- most of the above issues exist because in many blockchains transactions are either expensive or very slow to allow for massive user on-boarding campaigns (i.e., giving away assets).
 
 ## The Sui Coupon protocol
-Sui has unique features by design; it can almost scale indefinitely, offer record numbers in transaction speed and 
-latency, thus reducing the per-transaction cost, and provide batching which allows for blazing fast air-dropping, 
+Sui has unique features by design; it can scale indefinitely, offer record numbers in transaction speed and 
+latency, thus reducing the per-transaction cost, and provide batching which allows for blazing fast airdrops, 
 directly to layer-1 and not externally.
 
-Sui Coupons takes advantage of the aforementioned facts to reasonably solve most of the on-boarding problems, focusing 
-on users who never used a blockchain wallet in the past.
+Sui Coupons take advantage of the aforementioned facts to reasonably solve most of the on-boarding issues, focusing on
+users who never used a blockchain wallet in the past. It fits great to scenarios where in the traditional Web2.0 world 
+assets would be attached to email body anyway, such as discount coupons, subscription passwords and tickets. Sui Coupons 
+enables non-technical users to experience Web3.0 features, get familiar with NFTs, understanding the concept on-chain 
+asset ownership and socially share their NFTs even before they engage with wallet functionality.
 
-In Layman's terms the protocol is very simple and works as follows (per user): A merchant issues a coupon in the form of
-NFT Vs the conventional way of sharing coupon codes. To achieve this, it creates a Sui account and mnemonic for this 
-user, it mints a discount coupon NFT and transfers it along with some minimal SUI coins to the user's just generated Sui 
-address, and it finally emails the Sui explorer-link along with the pre-generated mnemonic to user's email address.  
+In Layman's terms the protocol is very simple and works as follows (per user):
+* A merchant issues a coupon in the form of NFT Vs the conventional way of sharing coupon codes.
+* To achieve this, it creates a Sui account and mnemonic for this user
+* it mints a discount coupon NFT and transfers it along with some minimum SUI coins to the user's just generated Sui 
+address
+* it finally emails the Sui explorer-link with the pre-generated mnemonic to user's email address.  
 
 Each user will receive an email where they can see their mnemonic, but most importantly a link to browse their asset, 
 their first on-chain NFT. Now, users who expect to spend their coupon are motivated to enroll to any wallet by entering 
@@ -58,12 +63,13 @@ owning the required Sui gas amount. We expect that because of Sui's low costs pe
 be willing to help users move their assets by tipping the user-transaction with the gas required. This extension is WIP.
 
 ## Application Components
-This project required the implementation or enhancements to the following 5 high-level components:
+This project required the implementation or enhancements to the following 6 high-level components:
 * the Move implementation of a simple Coupon NFT, available at [`DiscountCoupon`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/sui_programmability/framework/sources/DiscountCoupon.move)
 * a new Rest server end-point to support the `mint_and_topup` coupon POST request, available at [`rest_server.rs`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/sui/src/rest_server.rs)
 * a basic Rust Mail server to provide the coupon email template and submit emails via smtp server, available at [`coupon_utils.rs`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/sui/src/coupon_utils.rs)
+* a simple passphrase (mnemonic) derivation function using a merchant secret (seed) and user email addresses for easier key management, available at [`coupon_utils.rs`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/sui/src/coupon_utils.rs)
 * a Node JS server + frontend for the Coupon issuing Dashboard, available at [`examples/coupons/`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/examples/coupons/)
-* small updates to sui-explorer for NFT coupon templated show-casing, available at  [`explorer/client/`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/explorer/client/).
+* small updates to sui-explorer for NFT coupon templated show-casing, available at [`explorer/client/`](https://github.com/MystenLabs/sui/tree/sui-coupon-v0/explorer/client/).
 
 **Fig.1 Coupon Issuing -  Dashboard Main** 
 
@@ -100,7 +106,7 @@ git clone --branch sui-coupon-v0 https://github.com/MystenLabs/sui.git
 ---
 **Prerequisites - Before running**
 
-Set the following path variables, i.e., to temporarily set the in a MAC do:
+Set the following path variables, i.e., to temporarily set them in a MAC laptop, open a terminal and run:
 
 ```coupon_explorer-min
 export MAILER_SMTP=<S>
