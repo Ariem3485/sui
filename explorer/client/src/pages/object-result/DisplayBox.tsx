@@ -3,6 +3,7 @@
 
 import { useState, useCallback } from 'react';
 
+import { ModelViewComponent, fileTypeSupported } from '../../components/model-view/modelView';
 import { asciiFromNumberBytes } from '../../utils/stringUtils';
 import { type DataType } from './ObjectResultType';
 
@@ -66,6 +67,23 @@ function DisplayBox({ data }: { data: DataType }) {
         if (typeof contents.display === 'object' && 'bytes' in contents.display)
             contents.display = asciiFromNumberBytes(contents.display.bytes);
 
+
+        var elem;
+        // if it's a 3d model file type we support (GLTF / GLB), use model-viewer
+        if(fileTypeSupported(contents.display)) {
+            //@ts-ignore
+            elem = <ModelViewComponent src={contents.display}/>
+        } else {
+            elem = <img
+                className={styles.imagebox}
+                style={imageStyle}
+                alt="NFT"
+                src={contents.display}
+                onLoad={handleImageLoad}
+                onError={handleImageFail}
+            />
+        }
+
         return (
             <div className={styles['display-container']}>
                 {!hasDisplayLoaded && (
@@ -76,16 +94,7 @@ function DisplayBox({ data }: { data: DataType }) {
                 {hasFailedToLoad && (
                     <div className={styles.imagebox}>No Image was Found</div>
                 )}
-                {!hasFailedToLoad && (
-                    <img
-                        className={styles.imagebox}
-                        style={imageStyle}
-                        alt="NFT"
-                        src={contents.display}
-                        onLoad={handleImageLoad}
-                        onError={handleImageFail}
-                    />
-                )}
+                {!hasFailedToLoad && (elem)}
             </div>
         );
     }
