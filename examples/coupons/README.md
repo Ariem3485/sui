@@ -65,7 +65,7 @@ the same time the merchant is not requiring to run (or be considered) a custody 
 
 ## Sui Coupon extensions
 Note that Sui supports batched transactions from the same account, which is a very useful feature in the coupon scenario 
-as the merchant can force minting for multiple user in one mega transaction.
+as the merchant can force minting for multiple users in one mega transaction.
 
 Additionally, we are working in a multi-signer batch transaction model, which will allow for spending an NFT even without 
 owning the required Sui gas amount. We expect that because of Sui's low costs per transaction, many 3rd party services will 
@@ -128,9 +128,9 @@ Replace `<S>` with your smtp, i.e., `smtp.gmail.com`
 
 Replace `<U>` with your email address, i.e., `coupon@gmail.com`
 
-Replace `<P>` with your email password, i.e., `smtp.gmail.com`
+Replace `<P>` with your email password, i.e., `sdfkg236FSDEW3dsw`
 
-Replace `<K>` with a random seed string, i.e., `fdashkfjs7987fds`
+Replace `<K>` with a random seed string, i.e., `fdaSThkfjs7987FDCEW3`
 
 ---
 ## Execute Sui Coupons locally
