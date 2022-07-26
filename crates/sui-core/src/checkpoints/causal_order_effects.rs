@@ -360,7 +360,6 @@ mod tests {
 
         // Test4
         // Many dependencies
-        println!("Test 4");
 
         // Make some transactions
         let tx = TransactionDigest::random();
